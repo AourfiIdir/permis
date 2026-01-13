@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 export const connectDB = async () => {
     try {
     await mongoose.connect(
-      'mongodb+srv://db_user:Admin123@cluster0.ejsbzqw.mongodb.net/School-backend?retryWrites=true&w=majority'
+      'mongodb+srv://idiraourfi73_db_user:xW5WyCpDiu1SpsMa@cluster0.ye9dyjd.mongodb.net/'
     );
     console.log("✅ Connexion à MongoDB réussie !");
   } catch (error) {
@@ -11,4 +11,5 @@ export const connectDB = async () => {
     process.exit(1);
   }
 };
+connectDB();
 

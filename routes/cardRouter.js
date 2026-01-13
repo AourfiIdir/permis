@@ -1,5 +1,5 @@
 import express from 'express';
-import Module from '../models/Module.js';
+import Module from "../models/Card.js"
 
 const router = express.Router();
 

@@ -11,11 +11,11 @@ const cardSchema = new mongoose.Schema({
         trim: true
     },
     category: {
-        type: Schema.Types.Mixed,
+        type: String,
         required: true
     },
     content: {
-        type: String,
+        type: Schema.Types.Mixed,
         required: true,
         trim: true
     }
