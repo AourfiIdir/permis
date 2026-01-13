@@ -1,7 +1,11 @@
-import mongoose from "mongoose"
+import mongoose from 'mongoose';
 
-const ListSchema = mongoose.Schema({
-
+const ListSchema = new mongoose.Schema({
+   name: {
+     type: String,
+     required: true,
+     trim: true
+   },
 });
 
-export const List = mongoose.model("List",ListSchema);
+export default mongoose.model('Modules', ListSchema);
