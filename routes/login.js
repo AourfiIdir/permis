@@ -8,6 +8,8 @@ router.
     route("/login").
     get(loginCheck);
 
+export default router;
+
 
 
 
