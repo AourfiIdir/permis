@@ -9,9 +9,9 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "commonjs",
+  "type": "module",
   "dependencies": {
-    "express": "^5.2.1"
-  },
-  "type":"module"
+    "express": "^5.2.1",
+    "mongoose": "^9.1.3"
+  }
 }
