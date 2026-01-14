@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import validator from 'validator';
+import bcrypt from 'bcrypt';
 
 const UsersSchema = new mongoose.Schema({
   nom: {
@@ -21,7 +22,8 @@ const UsersSchema = new mongoose.Schema({
   password: {
     type: String,
     required: [true, "obligatory field"],
-    minlength: [6, 'Password must be at least 6 characters long']
+    minlength: [6, 'Password must be at least 6 characters long'],
+    select:false
   },
   sexe: {
     type: String,
@@ -37,9 +39,27 @@ const UsersSchema = new mongoose.Schema({
     type: Number,
     min: [18, 'Age must be at least 18'],
   },
+  role: {
+    type:String,
+    enum:['admin','user'],
+    required : [true,"obligatory field"]
+  },
+  username:{
+    type:String,
+    unique:true
+  }
 
 }, {
   timestamps: true
 });
 
-export default mongoose.model('Users', UsersSchema);
+UsersSchema.pre("save", async function () {
+  if (this.isModified("password")) {
+    const saltRounds = 10;
+    this.password = await bcrypt.hash(this.password, saltRounds);
+  }
+});
+
+
+
+export default mongoose.model('User', UsersSchema);

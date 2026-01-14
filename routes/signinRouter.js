@@ -1,11 +1,11 @@
 import express from "express"
 
-import {signinCheck} from "./services/signin"
+import signin from "../services/signinService.js"
 
 const router = express.Router();
 
 router.
-    route("/signin").
-    post(signinCheck);
+    route("/").
+    post(signin);
 
 export default router;

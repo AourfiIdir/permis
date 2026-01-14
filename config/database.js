@@ -1,9 +1,10 @@
 import mongoose from 'mongoose';
+import "dotenv/config"
 
-export const connectDB = async () => {
+export const connectDB = async (URL) => {
     try {
     await mongoose.connect(
-      'mongodb+srv://idiraourfi73_db_user:xW5WyCpDiu1SpsMa@cluster0.ye9dyjd.mongodb.net/'
+      URL
     );
     console.log("✅ Connexion à MongoDB réussie !");
   } catch (error) {
@@ -11,5 +12,9 @@ export const connectDB = async () => {
     process.exit(1);
   }
 };
-connectDB();
+
+export const disconnect = async ()=>{
+  await mongoose.disconnect();
+  console.log("Disconnected.");
+}
 
