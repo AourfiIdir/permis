@@ -10,7 +10,7 @@ export default function authentificateToken(req,res,next){
     //verify the token
     const verified = jwt.verify(bearerToken,process.env.JWT_SECRET_KEY,(err,user)=>{
         if(err){
-            res.status("400").json({
+            res.status(400).json({
                 err:"dont have access"
             }
         )
