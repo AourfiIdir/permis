@@ -5,9 +5,13 @@ import { connectDB } from './config/database.js';
 import cardRouter from "./routes/cardRouter.js"
 import loginRouter from "./routes/loginRouter.js"
 import sigininRouter from "./routes/signinRouter.js"
+import cookieParser from "cookie-parser";
+
+
 const PORT = process.env.PORT
 const app = express();
 
+app.use(cookieParser());
 app.use(express.json());
 app.use("/card",cardRouter)
 app.use("/login",loginRouter);

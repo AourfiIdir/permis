@@ -14,10 +14,21 @@ export default  async function signin(req,res){
         age: user.age,
         role: user.role,
         username: user.username
+    }
+)
+    res.status(200).json({
+        message:"user created succussfully",
+        user:userCreated
     })
     }catch(err){
-        if(err.code===11000) console.log("duplicated email or username")
-        else console.log(err);    
+        if(err.code===11000) return res.status(401).json({
+            err:"duplicated email or username"
+        });    
+        else return res.status(401).json({
+            message:"error in creating the user",
+            err:err
+        });  
+        
     }
     
     
