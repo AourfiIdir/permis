@@ -13,7 +13,7 @@ router.use(authentificateToken);
 
 router.
     route("/").
-    get(authentificateToken,getCards);
+    get(getCards);
 
 
 router.
