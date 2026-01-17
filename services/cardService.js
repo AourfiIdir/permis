@@ -24,7 +24,10 @@ export async function getCard(req,res){
 
 export async function getByCetag(req,res){
     try {
-            const categories = await Module.distinct('category');
+        const categ = req.params.category;
+            const categories = await Module.find({
+                category:categ
+            });
             res.status(200).json(categories);
         } catch (error) {
             res.status(500).json({ message: error.message });

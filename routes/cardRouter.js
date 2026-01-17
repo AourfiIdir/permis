@@ -1,9 +1,9 @@
 import express from 'express';
-
+import role from "../roles.js"
+import checkRoles from "../middleware/authenticateRole.js"
 import authentificateToken from "../middleware/authenticateToken.js"
 import {getCards,getCard,createCard,getByCetag} from "../services/cardService.js"
 
-import authentificateToken from '../middleware/authenticateToken.js';
 
 
 
@@ -13,23 +13,23 @@ router.use(authentificateToken);
 
 router.
     route("/").
-    get(authentificateToken,getCards);
+    get(checkRoles([role.USER,role.ADMIN]),getCards);
 
 
 router.
     route("/:id").
-    get(getCard);
+    get(checkRoles([role.USER,role.ADMIN]),getCard);
 
 
 
 
 router.
     route('/category').
-    get(getByCetag);
+    get(checkRoles([role.USER]),getByCetag);
 
 router.
     route('/').
-    post(createCard);
+    post(checkRoles([role.ADMIN]),createCard);
 
     /*
 router.get('/', async (req, res) => {

@@ -35,8 +35,14 @@ export function refresh(req, res) {
             if (err) {
                 return res.status(403).json({ error: "Not authorized" });
             }
-            const newAccessToken = createToken(user);
-
+            const username1 = user.username;
+            const role1 = user.role;
+            const payload = {
+                username:username1,
+                role:role1
+            }
+            const newAccessToken = createToken(payload);
+            
             res.status(200).json({ token: newAccessToken });
         }
     );
