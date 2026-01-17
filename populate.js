@@ -1,9 +1,11 @@
-
+import dotenv from "dotenv";
+dotenv.config();
 const URL = process.env.DB_ACCESS;
 import User from "./models/User.js";
 import { connectDB } from "./config/database.js";
 import { disconnect } from "./config/database.js";
 import Card from "./models/Card.js";
+import List from "./models/List.js";
 await connectDB(URL);
 
 
@@ -76,6 +78,17 @@ try {
   // Insert into DB
   const cardCreated = await Card.insertMany(cards);
   console.log(cardCreated);
+
+  const list = await List.create({
+    name: "Frontend Basics",
+    description: "L",
+    createdBy: newUser._id,
+    cards: cardCreated.map(card => card._id)
+  });
+  console.log("List created:", list);
+
+
+
 } catch (err) {
   if (err.code === 11000) console.log("Duplicate email or username");
   else console.error(err);

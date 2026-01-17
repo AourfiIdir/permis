@@ -5,6 +5,7 @@ import authenticateToken from '../middleware/authenticateToken.js';
 
 const router = express.Router();
 router.use(authenticateToken);
+
 router.route("/").get(getCompletions);
 router.route("/user/:userId").get(getCompletionsByUser);
 router.route("/card/:cardId").get(getCompletionsByCard);

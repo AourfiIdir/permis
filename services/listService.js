@@ -1,4 +1,4 @@
-import List from "../models/List";
+import List from "../models/List.js";
 import mongoose from "mongoose";
 
 

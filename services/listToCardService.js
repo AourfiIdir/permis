@@ -1,4 +1,4 @@
-import ListToItem from "../models/ListToItem";
+import Contains from "../models/ListToItem.js";
 import mongoose from "mongoose";
 export async function getCardsfromList(req,res){
       const { listId } = req.params;
@@ -40,7 +40,7 @@ export async function deletecardfromList(req,res){
          if (!mongoose.Types.ObjectId.isValid(listId) || !mongoose.Types.ObjectId.isValid(cardId)) {
               return res.status(400).json({ message: "Invalid listId or cardId" });
             }
-         const deleted = await ListToItem.findOneAndDelete({ listId, cardId });
+         const deleted = await Contains.findOneAndDelete({ listId, cardId });
          if (!deleted) return res.status(404).json({ message: "Relation not found" });
          res.json({ message: "Card removed from list" });
     }
