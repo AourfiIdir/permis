@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 const ContienSchema = new mongoose.Schema({
     listId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Lists',
+        ref: 'List',
         required: true
     },
     CardId: {

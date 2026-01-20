@@ -6,11 +6,16 @@ const MistakeSchema = new mongoose.Schema({
     ref: 'Users',
     required: true
   },
-  item: {
+  card: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Items',
+    ref: 'Card',
     required: true
   },
+  mistake:{
+    type:String,
+    require:true
+  },
+  
 }, {
   timestamps: true
 });

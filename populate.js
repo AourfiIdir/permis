@@ -6,6 +6,7 @@ import { connectDB } from "./config/database.js";
 import { disconnect } from "./config/database.js";
 import Card from "./models/Card.js";
 import List from "./models/List.js";
+import mongoose from "mongoose";
 await connectDB(URL);
 
 
@@ -83,7 +84,7 @@ try {
     name: "Frontend Basics",
     description: "L",
     createdBy: newUser._id,
-    cards: cardCreated.map(card => card._id)
+    cards: cardCreated.map(card =>card._id)
   });
   console.log("List created:", list);
 

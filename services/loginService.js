@@ -5,18 +5,7 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 
 
-//end point to log out remove the refresh token from browsrs cookies
-export function logout(req, res) {
-    res.clearCookie("refreshToken", {
-        httpOnly: true,
-        sameSite: "lax",
-        secure: false
-    });
 
-    res.status(200).json({
-        message: "Logged out successfully"
-    });
-}
 
 
 
@@ -69,20 +58,15 @@ export default async function login(req, res) {
 
         const accessToken = createToken(payload);
 
-        const refreshToken = jwt.sign(
+        const accessRefresh = jwt.sign(
             payload,
             process.env.JWT_SECRET_KEY
             ,{ expiresIn: "7d" }
         );
 
-        res.cookie("refreshToken", refreshToken, {
-            httpOnly: true,
-            secure: false, // true in production
-            sameSite: "lax",
-            maxAge: 7 * 24 * 60 * 60 * 1000
-        });
+        
 
-        res.status(200).json({ token: accessToken });
+        res.status(200).json({ token: accessToken , refreshToken:accessRefresh});
 
     } catch (error) {
         console.error(error);

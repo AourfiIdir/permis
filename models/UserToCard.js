@@ -13,7 +13,7 @@ const CompleteSchema = new mongoose.Schema({
     },
     status: {
         type: String,
-        enum: ['completed', 'incomplete'],
+        enum: ['completed', 'uncomplete'],
         required: true
     }
 }, {
