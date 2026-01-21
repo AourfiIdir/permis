@@ -1,77 +1,89 @@
 import Progress from "../models/Progress.js";
-import mongoose from "mongoose";
-export async function getProgress(req,res){
+import {createProgressSchema,updateProgressSchema,progressIdParamsSchema} from "../Validators/progressValidator.js";
+
+// Get all progresses
+export async function getProgress(req, res) {
   try {
-    const progresses = await Progress.find()
-      .populate('cardId')
-      .populate('userId');
+    const progresses = await Progress.find().populate("userId");
     res.status(200).json(progresses);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 }
 
-export async function getProgressById(req,res){
-  const { id } = req.params;
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-    return res.status(400).json({ message: "Invalid ID" });
+// Get progress by ID
+export async function getProgressById(req, res) {
+  try {
+    const { id } = progressIdParamsSchema.parse(req.params);
+
+    const progress = await Progress.findById(id).populate("userId");
+    if (!progress) return res.status(404).json({ message: "Progress not found" });
+
+    res.status(200).json(progress);
+  } catch (error) {
+    if (error.name === "ZodError") {
+      const messages = error.errors.map(e => e.message);
+      return res.status(400).json({ message: messages });
+    }
+    res.status(500).json({ message: error.message });
   }
-    try {
-        const progress = await Progress.findById(id)
-          .populate('cardId')
-          .populate('userId');
-        if (!progress) return res.status(404).json({ message: "Progress not found" });
-        res.status(200).json(progress);
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
 }
-export async function createProgress(req,res){
-  const { cardId, userId, status } = req.body;
-    if (!cardId || !userId || !status) {
-        return res.status(400).json({ message: "cardId, userId, and status are required" });
-    }
 
-    if (!mongoose.Types.ObjectId.isValid(cardId) || !mongoose.Types.ObjectId.isValid(userId)) {
-        return res.status(400).json({ message: "Invalid cardId or userId" });
+// Create progress
+export async function createProgress(req, res) {
+  try {
+    const validatedData = createProgressSchema.parse(req.body);
+
+    const progress = new Progress(validatedData);
+    const savedProgress = await progress.save();
+
+    res.status(201).json(savedProgress);
+  } catch (error) {
+    if (error.name === "ZodError") {
+      const messages = error.errors.map(e => e.message);
+      return res.status(400).json({ message: messages });
     }
-    try {
-        const progress = await Progress.create({ cardId, userId, status });
-        res.status(201).json(progress);
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }  
+    res.status(500).json({ message: error.message });
+  }
 }
-export async function updateProgress(req,res){
-  const { id } = req.params;
-  const { status } = req.body;
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-        return res.status(400).json({ message: "Invalid ID" });
-    }
 
-    try {
-        const progressUpdated = await Progress.findByIdAndUpdate(
-            id,
-            { status },
-            { new: true, runValidators: true }
-        );
-        if (!progressUpdated) return res.status(404).json({ message: "Progress not found" });
-        res.status(200).json(progressUpdated);
-    } catch (error) {
-        res.status(500).json({ message: error.message });
+// Update progress
+export async function updateProgress(req, res) {
+  try {
+    const { id } = progressIdParamsSchema.parse(req.params);
+    const validatedData = updateProgressSchema.parse(req.body);
+
+    const updatedProgress = await Progress.findByIdAndUpdate(id, validatedData, {
+      new: true,
+      runValidators: true,
+    });
+
+    if (!updatedProgress) return res.status(404).json({ message: "Progress not found" });
+
+    res.status(200).json(updatedProgress);
+  } catch (error) {
+    if (error.name === "ZodError") {
+      const messages = error.errors.map(e => e.message);
+      return res.status(400).json({ message: messages });
     }
+    res.status(500).json({ message: error.message });
+  }
 }
-export async function deleteProgress(req,res){
-  const { id } = req.params;
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-        return res.status(400).json({ message: "Invalid ID" });
-    }
 
-    try {
-        const deletedProgress = await Progress.findByIdAndDelete(id);
-        if (!deletedProgress) return res.status(404).json({ message: "Progress not found" });
-        res.status(200).json({ message: "Progress deleted successfully" });
-    } catch (error) {
-        res.status(500).json({ message: error.message });
+// Delete progress
+export async function deleteProgress(req, res) {
+  try {
+    const { id } = progressIdParamsSchema.parse(req.params);
+
+    const deletedProgress = await Progress.findByIdAndDelete(id);
+    if (!deletedProgress) return res.status(404).json({ message: "Progress not found" });
+
+    res.status(200).json({ message: "Progress deleted successfully" });
+  } catch (error) {
+    if (error.name === "ZodError") {
+      const messages = error.errors.map(e => e.message);
+      return res.status(400).json({ message: messages });
     }
+    res.status(500).json({ message: error.message });
+  }
 }
