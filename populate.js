@@ -87,9 +87,6 @@ try {
     cards: cardCreated.map(card =>card._id)
   });
   console.log("List created:", list);
-
-
-
 } catch (err) {
   if (err.code === 11000) console.log("Duplicate email or username");
   else console.error(err);

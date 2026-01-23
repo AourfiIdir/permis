@@ -1,0 +1,28 @@
+version: "3.9"
+
+services:
+  api:
+    build: .
+    container_name: card-api
+    ports:
+      - "3000:3000"
+    environment:
+      - MONGO_URI=mongodb+srv://idiraourfi73_db_user:xW5WyCpDiu1SpsMa@cluster0.ye9dyjd.mongodb.net/
+    depends_on:
+      - mongo
+    volumes:
+      - .:/app
+      - /app/node_modules
+    restart: unless-stopped
+
+  mongo:
+    image: mongo:7
+    container_name: mongo-db
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    restart: unless-stopped
+
+volumes:
+  mongo_data:

@@ -4,8 +4,18 @@ import createToken from "../utilityFuncs/createToken.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 
+//end point to log out remove the refresh token from browsrs cookies
+export function logout(req, res) {
+    res.clearCookie("refreshToken", {
+        httpOnly: true,
+        sameSite: "lax",
+        secure: false
+    });
 
-
+    res.status(200).json({
+        message: "Logged out successfully"
+    });
+}
 
 
 
@@ -31,7 +41,6 @@ export function refresh(req, res) {
                 role:role1
             }
             const newAccessToken = createToken(payload);
-            
             res.status(200).json({ token: newAccessToken });
         }
     );
@@ -64,9 +73,7 @@ export default async function login(req, res) {
             ,{ expiresIn: "7d" }
         );
 
-        
-
-        res.status(200).json({ token: accessToken , refreshToken:accessRefresh});
+        res.status(200).json({ token: accessToken , refreshToken:accessRefresh});}
 
     } catch (error) {
         console.error(error);

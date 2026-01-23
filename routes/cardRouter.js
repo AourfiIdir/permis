@@ -4,12 +4,8 @@ import checkRoles from "../middleware/authenticateRole.js"
 import authentificateToken from "../middleware/authenticateToken.js"
 import {getCards,getCard,createCard,getByCategory} from "../services/cardService.js"
 
-
-
-
 const router = express.Router();
 router.use(authentificateToken);
-
 
 router.
     route("/").
@@ -69,4 +65,5 @@ router.post('/', async (req, res) => {
     }
 });  
 */
+
 export default router;
