@@ -15,8 +15,9 @@ export const createListSchema = z.object({
     .string({
       invalid_type_error: "Description must be a string",
     })
+    .trim()
     .optional()
-    .trim(),
+    ,
 
   createdBy: z
     .string({

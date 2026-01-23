@@ -40,3 +40,34 @@ export async function updateCardStatus(req, res) {
     res.status(500).json({ message: error.message });
   }
 }
+export async function setComplete(req, res) {
+  try {
+    const { userId, cardId } = req.body;
+    const result = await UserToCard.updateOne(
+      { userId, cardId },
+      { $set: { status: "complete" } }
+    );
+    if (result.matchedCount === 0) {
+      return res.status(404).json({ message: "User-card relation not found" });
+    }
+    res.status(200).json({ message: "Card marked as complete" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+}
+
+export async function setUncomplete(req, res) {
+  try {
+    const { userId, cardId } = req.body;
+    const result = await UserToCard.updateOne(
+      { userId, cardId },
+      { $set: { status: "uncomplete" } }
+    );
+    if (result.matchedCount === 0) {
+      return res.status(404).json({ message: "User-card relation not found" });
+    }
+    res.status(200).json({ message: "Card marked as uncomplete" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+}

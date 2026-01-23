@@ -73,7 +73,7 @@ export default async function login(req, res) {
             ,{ expiresIn: "7d" }
         );
 
-        res.status(200).json({ token: accessToken , refreshToken:accessRefresh});}
+        res.status(200).json({ token: accessToken , refreshToken:accessRefresh});
 
     } catch (error) {
         console.error(error);
