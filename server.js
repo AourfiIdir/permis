@@ -1,5 +1,6 @@
 import express from "express"
 import "dotenv/config"
+import cors from "cors"
 const URL = process.env.DB_ACCESS;
 import { connectDB } from './config/database.js';
 import userRouter from "./routes/userRouter.js"
@@ -12,9 +13,11 @@ import progressRouter from "./routes/ProgressRouter.js"
 import ListToCard from "./routes/ListToCard.js";
 import UserToCardRouter from "./routes/UsertoCardRouter.js";
 import { errorHandler } from "./middleware/errorHandler.js";
+
 const PORT = process.env.PORT
 const app = express();
 
+app.use(cors());
 app.use(cookieParser());
 app.use(express.json());
 app.use("/card",cardRouter)

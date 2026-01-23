@@ -1,5 +1,5 @@
 import Card from "../models/Card.js";
-import { createCardSchema } from "../Validator/cardValidator.js";
+import { createCardSchema } from "../Validators/cardValidator.js";
 
 // Get all cards
 export async function getCards(req, res) {

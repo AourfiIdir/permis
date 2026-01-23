@@ -2,7 +2,7 @@ import express from 'express';
 import role from "../roles.js"
 import checkRoles from "../middleware/authenticateRole.js"
 import authentificateToken from "../middleware/authenticateToken.js"
-import {getCards,getCard,createCard,getByCetag} from "../services/cardService.js"
+import {getCards,getCard,createCard,getByCategory} from "../services/cardService.js"
 
 
 
@@ -25,7 +25,7 @@ router.
 
 router.
     route('/category').
-    get(checkRoles([role.USER]),getByCetag);
+    get(checkRoles([role.USER]),getByCategory);
 
 router.
     route('/').
