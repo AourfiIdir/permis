@@ -27,8 +27,8 @@ export async function getCard(req, res) {
 // Get cards by category
 export async function getByCategory(req, res) {
   try {
-    const category = req.params.category;
-    const cards = await Card.find({ category });
+    const { categoryName } = req.params;
+    const cards = await Card.find({ category: categoryName });
     res.status(200).json(cards);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -54,3 +54,15 @@ export async function createCard(req, res) {
     res.status(500).json({ message: error.message });
   }
 }
+
+export async function getCategories(req, res) {
+
+  
+  try {
+    const categories = await Card.distinct("category");
+    res.status(200).json(categories);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+}
+

@@ -3,40 +3,50 @@ import EmailOtp from "../models/EmailOtp.js"
 import bcrypt from "bcrypt";
 import crypto from "crypto";
 import { sendOtpEmail } from "../utilityFuncs/emailSender.js";
-// POST /auth/request-otp  (no user creation yet)
+
 export async function requestOtp(req, res) {
   const { email } = req.body;
-  try {
-    // ensure email not already used
-    const exists = await User.findOne({ email });
-    if (exists) return res.status(400).json({ ok: false, message: "Email already used" });
 
+  if (!email) {
+    return res.status(400).json({ ok: false, message: "Email is required" });
+  }
+
+  try {
+    // 1️⃣ Remove old OTP if exists
+    await EmailOtp.deleteOne({ email });
+
+    // 2️⃣ Generate OTP
     const otp = crypto.randomInt(100000, 999999).toString();
     const otpHash = await bcrypt.hash(otp, 10);
-    const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
+    const expiresAt = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
 
-    await EmailOtp.findOneAndUpdate(
-      { email },
-      { otpHash, expiresAt },
-      { upsert: true, new: true }
-    );
+    // 3️⃣ Save OTP to DB
+    await EmailOtp.create({ email, otpHash, expiresAt });
 
+    // 4️⃣ Send OTP via email
     await sendOtpEmail(email, otp);
-    res.json({ ok: true, message: "OTP sent" });
+
+    // 5️⃣ Response (do NOT return OTP in production)
+    res.json({ ok: true, message: "OTP sent successfully" });
+
   } catch (err) {
+    console.error(err);
     res.status(500).json({ ok: false, message: "Failed to send OTP" });
   }
 }
 
 
 
+
+
 export async function signin(req,res){
     const {nom,prenom,email,otp,password,sexe,wilaya,age,username} = req.body;
     //create an user
+    const role="user";
     try{
 
         const record = await EmailOtp.findOne({ email });
-        if (!record) return res.status(400).json({ ok: false, message: "Code not found" });
+        if (!record) return res.status(400).json({ ok: false, message: "Code not found" ,email:email});
         if (record.expiresAt < new Date()) return res.status(400).json({ ok: false, message: "Code expired" });
 
         const ok = await bcrypt.compare(otp, record.otpHash);

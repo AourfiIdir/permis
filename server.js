@@ -13,11 +13,11 @@ import progressRouter from "./routes/ProgressRouter.js"
 import ListToCard from "./routes/ListToCard.js";
 import UserToCardRouter from "./routes/UsertoCardRouter.js";
 import { errorHandler } from "./middleware/errorHandler.js";
-
+import mistakeRouter from "./routes/mistakeRouter.js";
 const PORT = process.env.PORT
 const app = express();
 
-app.use(cors());
+app.use(cors()); //change it in the production to restrict the origin
 app.use(cookieParser());
 app.use(express.json());
 app.use("/card",cardRouter)
@@ -28,6 +28,7 @@ app.use("/progress",progressRouter);
 app.use("/listtocard",ListToCard);
 app.use("/usertocard",UserToCardRouter);
 app.use("/user",userRouter);
+app.use("/mistake",mistakeRouter);
 
 app.use(errorHandler);
 

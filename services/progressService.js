@@ -28,6 +28,30 @@ export async function getProgressById(req, res) {
     res.status(500).json({ message: error.message });
   }
 }
+// Get progress by User ID
+export async function getProgressByUserId(req, res) {
+  try {
+    const userId = req.user.id;
+    if (!userId) {
+      return res.status(400).json({ message: "User ID is required" });
+    }
+    const progresses = await Progress.find({ userId }).populate("userId").sort({ createdAt: -1 });
+    if (progresses.length === 0) {
+      return res.status(200).json({
+        message: "No progress found for this user",
+        progresses: []
+      });
+    }
+    res.status(200).json({
+      userId: userId,
+      progressCount: progresses.length,
+      progresses: progresses
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+}
+
 
 // Create progress
 export async function createProgress(req, res) {

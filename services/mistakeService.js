@@ -1,10 +1,10 @@
-import mistake from '../models/mistakeModel.js';
+import Mistake from '../models/Mistake.js';
 
 // Create a new mistake
 export async function createMistake(req, res) {
     try {
         const { description, userId, timestamp } = req.body;
-        const newMistake = new mistake({ description, userId, timestamp });
+        const newMistake = new Mistake({ description, userId, timestamp });
         const savedMistake = await newMistake.save();
         res.status(201).json(savedMistake);
     } catch (error) {
@@ -13,7 +13,7 @@ export async function createMistake(req, res) {
 }
 export async function getMistakes(req, res) {
     try {
-        const mistakes = await mistake.find();
+        const mistakes = await Mistake.find();
         res.status(200).json(mistakes);
     } catch (error) {
         res.status(500).json({ message: error.message });
@@ -22,7 +22,7 @@ export async function getMistakes(req, res) {
 export async function getMistakeById(req, res) {
     try {
         const { id } = req.params;
-        const foundMistake = await mistake.findById(id);
+        const foundMistake = await Mistake.findById(id);
         if (!foundMistake) {
             return res.status(404).json({ message: "Mistake not found" });
         }
@@ -32,12 +32,46 @@ export async function getMistakeById(req, res) {
     }
 }
 
+// ...existing code...
+
+export async function getMistakeByUserId(req, res) {
+    try {
+        const { userId } = req.params;
+        
+        if (!userId) {
+            return res.status(400).json({ message: "User ID is required" });
+        }
+
+        // Find all mistakes where user field matches userId
+        const mistakes = await Mistake.find({ user: userId })
+            .populate('card')  // Optional: populate card details
+            .sort({ createdAt: -1 }); // Sort by newest first
+        
+        if (mistakes.length === 0) {
+            return res.status(200).json({ 
+                message: "No mistakes found for this user", 
+                mistakes: [] 
+            });
+        }
+
+        res.status(200).json({ 
+            userId: userId,
+            mistakeCount: mistakes.length,
+            mistakes: mistakes 
+        });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
+// ...existing code...
+
 // Update a mistake
 export async function updateMistake(req, res) {
     try {
         const { id } = req.params;
         const { description, userId, timestamp } = req.body;
-        const updatedMistake = await mistake.findByIdAndUpdate(
+        const updatedMistake = await Mistake.findByIdAndUpdate(
             id,
             { description, userId, timestamp },
             { new: true }
@@ -55,7 +89,7 @@ export async function updateMistake(req, res) {
 export async function deleteMistake(req, res) {
     try {
         const { id } = req.params;
-        const deletedMistake = await mistake.findByIdAndDelete(id);
+        const deletedMistake = await Mistake.findByIdAndDelete(id);
         if (!deletedMistake) {
             return res.status(404).json({ message: "Mistake not found" });
         }

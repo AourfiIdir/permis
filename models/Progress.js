@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import { type } from "os";
+
 const ProgressSchema = new mongoose.Schema({
     type: {
         type: String,
@@ -8,7 +9,7 @@ const ProgressSchema = new mongoose.Schema({
     },
     userId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Users',
+        ref: 'User',
         required: true
     },
     points : {

@@ -6,7 +6,7 @@ const router = express.Router();
 
 router.
     route("/").
-    get(loginCheck);
+    post(loginCheck);
 
 router.
     route("/refresh").

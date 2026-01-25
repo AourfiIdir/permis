@@ -34,10 +34,9 @@ export function refresh(req, res) {
             if (err) {
                 return res.status(403).json({ error: "Not authorized" });
             }
-            const username1 = user.username;
             const role1 = user.role;
             const payload = {
-                username:username1,
+                id: user._id,
                 role:role1
             }
             const newAccessToken = createToken(payload);
@@ -57,11 +56,11 @@ export default async function login(req, res) {
 
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
-            return res.status(401).json({ err: "Invalid credentials" });
+            return res.status(400).json({ err: "Invalid credentials" });
         }
 
         const payload = {
-            username: user.username,
+            id: user._id,
             role: user.role
         };
 
@@ -74,10 +73,11 @@ export default async function login(req, res) {
         );
 
         res.status(200).json({ token: accessToken , refreshToken:accessRefresh});
-
+        console.log("User logged in:", username);
     } catch (error) {
         console.error(error);
         res.status(500).json({ err: "Server error" });
+        console.log("Login error:", error);
     }
 }
 
