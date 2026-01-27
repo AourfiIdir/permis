@@ -2,15 +2,17 @@ import List from "../models/List.js";
 import mongoose from "mongoose";
 import { createListSchema } from "../Validators/listValidator.js"; // Zod schema
 
-// GET all lists
+//get user lists
 export async function getLists(req, res) {
   try {
-    const lists = await List.find();
+    const userId = req.user.id;
+    const lists = await List.find({createdBy:userId});
     res.status(200).json(lists);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 }
+
 
 // GET a list by ID
 export async function getListById(req, res) {

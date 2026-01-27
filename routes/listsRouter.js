@@ -1,13 +1,15 @@
 import express from 'express';
-import { getListById, getLists,deleteList,createList,updateList } from '../services/listService.js';
+import { getListById, getLists,deleteList,createList,updateList} from '../services/listService.js';
 import authenticateToken from '../middleware/authenticateToken.js';
 
 const router = express.Router();
 
 router.use(authenticateToken);
 
+//router returns lists specified to an user
 router.route("/").
     get(getLists);
+
 
 router.route("/:id").
 get(getListById);
