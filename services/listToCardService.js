@@ -22,13 +22,18 @@ export async function getCardsfromList(req, res) {
 // ADD card to a list
 export async function addcardtoList(req, res) {
   try {
-    const { listId, cardId } = addOrDeleteCardSchema.parse(req.body);
+    //const { listId, cardId } = addOrDeleteCardSchema.parse(req.params);
+    const {listId,cardId} = req.params;
+    // Validate MongoDB ObjectIds
+    if (!mongoose.Types.ObjectId.isValid(listId) || !mongoose.Types.ObjectId.isValid(cardId)) {
+      return res.status(400).json({ message: "Invalid list ID or card ID" });
+    }
 
     const relation = await Contains.create({ listId, CardId: cardId });
     res.status(201).json(relation);
   } catch (error) {
     if (error.name === "ZodError") {
-      const messages = error.errors.map(e => e.message);
+      const messages = error.errors?.map(e => e.message) || [];
       return res.status(400).json({ message: messages });
     }
     if (error.code === 11000) {
@@ -41,7 +46,7 @@ export async function addcardtoList(req, res) {
 // DELETE card from a list
 export async function deletecardfromList(req, res) {
   try {
-    const { listId, cardId } = addOrDeleteCardSchema.parse(req.body);
+    const { listId, cardId } = req.params;
 
     const deleted = await Contains.findOneAndDelete({ listId, CardId: cardId });
     if (!deleted) return res.status(404).json({ message: "Relation not found" });

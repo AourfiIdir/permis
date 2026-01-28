@@ -5,8 +5,8 @@ import authenticateToken from '../middleware/authenticateToken.js';
 const router = express.Router();
 router.use(authenticateToken);
 router.route("/:listId/cards").get(getCardsfromList);
-router.route("/").post(addcardtoList);
-router.route("/").delete(deletecardfromList);
+router.route("/:listId/:cardId").post(addcardtoList);
+router.route("/:listId/:cardId").delete(deletecardfromList);
 
 export default router;
 

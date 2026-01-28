@@ -10,15 +10,20 @@ router.use(authenticateToken);
 router.route("/").
     get(getLists);
 
+//create a list
+router.route("/").
+post(createList);
+
 
 router.route("/:id").
 get(getListById);
 
-router.route("/:id/cards").
-delete(deleteList);
 
-router.route("/").
-post(createList);
+//delete a list
+router.route("/:id").
+delete(deleteList)
+
+
 
 router.route("/:id").
 put(updateList);

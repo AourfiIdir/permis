@@ -1,3 +1,4 @@
+
 import List from "../models/List.js";
 import mongoose from "mongoose";
 import { createListSchema } from "../Validators/listValidator.js"; // Zod schema
@@ -49,15 +50,21 @@ export async function deleteList(req, res) {
 // CREATE a new list with validation
 export async function createList(req, res) {
   try {
-    const validatedData = createListSchema.parse(req.body); // Zod validation
-
-    const newList = new List(validatedData);
+    const validatedData = req.body; // Zod validation
+    const userId = req.user.id;
+    
+    if (!userId) {
+      return res.status(401).json({ message: "User not authenticated" });
+    }
+    
+    const validatedData2 = {...validatedData, createdBy: userId, cards: []};
+    const newList = new List(validatedData2);
     const savedList = await newList.save();
 
     res.status(201).json(savedList);
   } catch (error) {
     if (error.name === "ZodError") {
-      const messages = error.errors.map(e => e.message);
+      const messages = error.errors?.map(e => e.message) || [];
       return res.status(400).json({ message: messages });
     }
     res.status(500).json({ message: error.message });
@@ -86,9 +93,9 @@ export async function updateList(req, res) {
     res.status(200).json(updatedList);
   } catch (error) {
     if (error.name === "ZodError") {
-      const messages = error.errors.map(e => e.message);
+      const messages = error.errors?.map(e => e.message) || [];
       return res.status(400).json({ message: messages });
     }
     res.status(500).json({ message: error.message });
   }
-}
+} 
