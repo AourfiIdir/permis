@@ -18,7 +18,13 @@ const cardSchema = new mongoose.Schema({
         type: Schema.Types.Mixed,
         required: true,
         trim: true
+    },
+    imageURI: {
+        type: String,
+        required: true,
+        trim: true
     }
+
 }, {
     timestamps: true,
     collection: 'Cards'

@@ -15,5 +15,9 @@ export const createCardSchema = z.object({
     .min(1, "Category cannot be empty")
     .trim(),
   content: z.any({ required_error: "Content is required" }),
+  imageURI: z
+    .string({ invalid_type_error: "ImageURL must be a string" })
+    .url("ImageURL must be a valid URL")
+    .optional()
 }).strict();
 

@@ -97,3 +97,13 @@ export async function getCardStatus(req, res) {
     res.status(500).json({ message: error.message });
   }
 }
+export async function createUserCard(req, res) {
+  try {
+    const { cardId,userId } = req.body;
+    const newUserToCard = new UserToCard({ userId, cardId, status: "uncomplete" });
+    const savedUserToCard = await newUserToCard.save();
+    res.status(201).json(savedUserToCard);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+}

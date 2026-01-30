@@ -2,7 +2,7 @@ import Card from "../models/Card.js";
 import { createCardSchema } from "../Validators/cardValidator.js";
 
 // Get all cards
-export async function getCards(req, res) {
+export async function getCards(_req, res) {
   try {
     const cards = await Card.find();
     res.status(200).json(cards);
@@ -48,12 +48,15 @@ export async function createCard(req, res) {
     res.status(201).json(savedCard);
   } catch (error) {
     if (error.name === "ZodError") {
-      const messages = error.errors.map((e) => e.message);
+      const messages = error.issues.map((e) => e.message);
       return res.status(400).json({ message: messages });
     }
     res.status(500).json({ message: error.message });
   }
 }
+
+
+
 
 export async function getCategories(req, res) {
 
@@ -61,6 +64,14 @@ export async function getCategories(req, res) {
   try {
     const categories = await Card.distinct("category");
     res.status(200).json(categories);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+}
+export async function deleteAllCards(_req, res) {
+  try {
+    const result = await Card.deleteMany({});
+    res.status(200).json({ message: `${result.deletedCount} cards deleted.` });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
