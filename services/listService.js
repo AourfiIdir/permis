@@ -99,3 +99,18 @@ export async function updateList(req, res) {
     res.status(500).json({ message: error.message });
   }
 } 
+
+
+export async function addCardToList(req,res){
+  const userId = req.user.id;
+  const {listId,cardId} = req.params;
+  try{
+
+      const myList = await List.findByIdAndUpdate(listId,{$addToSet:{cards:cardId}},{new:true});
+      if(!myList) return res.status(404).json({message:"failed in adding the card :/"})
+        res.status(200).json({message:"added card successfully"})
+  }catch(err){
+    
+    res.status(500).json({message:err.message});
+  }
+}

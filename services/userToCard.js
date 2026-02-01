@@ -1,6 +1,7 @@
 import UserToCard from "../models/UserToCard.js";
 import { updateUserCardSchema } from "../Validators/userToCardValidator.js";
 import Card from "../models/Card.js";
+
 // Get all cards for a user
 // ...existing code...
 
@@ -81,6 +82,7 @@ export async function setComplete(req, res) {
 
 
 
+
 export async function getCardStatus(req, res) {
 
   try {
@@ -105,5 +107,66 @@ export async function createUserCard(req, res) {
     res.status(201).json(savedUserToCard);
   } catch (error) {
     res.status(500).json({ message: error.message });
+  }
+}
+
+export async function getHitCards(req, res) {
+  const userId = req.user.id;
+
+  try {
+    const cards = await UserToCard.find({ userId, hit: {$gt:0} });
+
+    if (cards.length === 0) {
+      return res.status(404).json({
+        message: "No cards found",
+      });
+    }
+    cards = cards.map((card)=>{
+      return card.cardId
+    })
+    return res.status(200).json({ cards
+    });
+  } catch (err) {
+    return res.status(500).json({
+      message: "Internal server error",
+      error: err.message,
+    });
+  }
+}
+export async function modifyHit(req, res) {
+  const userId = req.user.id;
+  const { cardId } = req.params;
+  const { action } = req.body;
+
+  try {
+    if (action !== "inc" && action !== "dec") {
+      return res.status(400).json({
+        message: "Invalid action. Use 'inc' or 'dec'.",
+      });
+    }
+
+    const incrementValue = action === "inc" ? 1 : -1;
+
+    const updatedCard = await UserToCard.findOneAndUpdate(
+      { userId, cardId },
+      { $inc: { hit: incrementValue } },
+      { new: true } // return updated document
+    );
+
+    if (!updatedCard) {
+      return res.status(404).json({
+        message: "Card not found for this user",
+      });
+    }
+
+    return res.status(200).json({
+      message: "Hit updated successfully",
+      card: updatedCard,
+    });
+  } catch (err) {
+    return res.status(500).json({
+      message: "Internal server error",
+      error: err.message,
+    });
   }
 }

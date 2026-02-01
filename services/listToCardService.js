@@ -1,6 +1,6 @@
 import Contains from "../models/ListToItem.js";
 import { addOrDeleteCardSchema, getCardsFromListParamsSchema } from "../Validators/listToCardValidator.js";
-
+import mongoose from "mongoose"
 // GET cards from a list
 export async function getCardsfromList(req, res) {
   try {
@@ -33,7 +33,7 @@ export async function addcardtoList(req, res) {
     res.status(201).json(relation);
   } catch (error) {
     if (error.name === "ZodError") {
-      const messages = error.errors?.map(e => e.message) || [];
+      const messages = error.issues.map(e => e.message) || [];
       return res.status(400).json({ message: messages });
     }
     if (error.code === 11000) {

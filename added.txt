@@ -1,0 +1,2 @@
+added func to usertocard router serive
+added a hit column

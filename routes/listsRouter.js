@@ -1,5 +1,5 @@
 import express from 'express';
-import { getListById, getLists,deleteList,createList,updateList} from '../services/listService.js';
+import { getListById, getLists,deleteList,createList,updateList,addCardToList} from '../services/listService.js';
 import authenticateToken from '../middleware/authenticateToken.js';
 
 const router = express.Router();
@@ -28,7 +28,7 @@ delete(deleteList)
 router.route("/:id").
 put(updateList);
 
-
+router.route("/:listId/:cardId").post(addCardToList);
 
 
 

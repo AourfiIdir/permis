@@ -16,6 +16,10 @@ const CompleteSchema = new mongoose.Schema({
         type: String,
         enum: ['completed', 'uncomplete'],
         required: true
+    },
+    hit:{
+        type:Number,
+        default:0
     }
 }, {
     timestamps: true

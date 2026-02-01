@@ -81,48 +81,56 @@ try {
       name: "Road Signs",
       description: "Learn common road signs",
       category: "learning-signs",
+      imageURI: "https://res.cloudinary.com/dcucbns8r/image/upload/v1769699562/danger_train_compressed_page-0001_kev3c6.jpg",
       content: { topics: ["stop sign", "yield sign", "speed limit"], level: "beginner" }
     },
     {
       name: "Traffic Order Learning",
       description: "Master traffic rules and order",
       category: "learning-order",
+      imageURI: "https://res.cloudinary.com/dcucbns8r/image/upload/v1769699562/danger_train_compressed_page-0001_kev3c6.jpg",
       content: { topics: ["intersection rules", "lane changes", "right of way"], level: "intermediate" }
     },
     {
       name: "Traffic Penalties",
       description: "Learn about traffic penalties",
       category: "learning-penalties",
+      imageURI: "https://res.cloudinary.com/dcucbns8r/image/upload/v1769699562/danger_train_compressed_page-0001_kev3c6.jpg",
       content: { topics: ["speeding penalties", "parking fines"], level: "intermediate" }
     },
     {
       name: "General Questions",
       description: "General driving knowledge questions",
       category: "learning-general-question",
+      imageURI: "https://res.cloudinary.com/dcucbns8r/image/upload/v1769699562/danger_train_compressed_page-0001_kev3c6.jpg",
       content: { topics: ["vehicle maintenance", "safety"], level: "beginner" }
     },
     {
       name: "Signs Quiz",
       description: "Test your knowledge on road signs",
       category: "quiz-signs",
+      imageURI: "https://res.cloudinary.com/dcucbns8r/image/upload/v1769699562/danger_train_compressed_page-0001_kev3c6.jpg",
       content: { questions: 15, difficulty: "medium" }
     },
     {
       name: "Order Quiz",
       description: "Quiz on traffic rules and order",
       category: "quiz-order",
+      imageURI: "https://res.cloudinary.com/dcucbns8r/image/upload/v1769699562/danger_train_compressed_page-0001_kev3c6.jpg",
       content: { questions: 10, difficulty: "medium" }
     },
     {
       name: "Penalties Quiz",
       description: "Quiz on traffic penalties and fines",
       category: "quiz-penalties",
+      imageURI: "https://res.cloudinary.com/dcucbns8r/image/upload/v1769699562/danger_train_compressed_page-0001_kev3c6.jpg",
       content: { questions: 12, difficulty: "hard" }
     },
     {
       name: "General Questions Quiz",
       description: "Test general driving knowledge",
       category: "quiz-general-question",
+      imageURI: "https://res.cloudinary.com/dcucbns8r/image/upload/v1769699562/danger_train_compressed_page-0001_kev3c6.jpg",
       content: { questions: 20, difficulty: "medium" }
     }
   ]);
@@ -151,12 +159,24 @@ try {
   ]);
   console.log("✓ Lists created:", lists.length);
 
-  // Create UserToCard (Complete)
+  // Create UserToCard (Complete) - entries for all cards
   const completes = await Complete.insertMany([
     { cardId: cards[0]._id, userId: users[0]._id, status: "completed" },
+    { cardId: cards[1]._id, userId: users[0]._id, status: "uncomplete" },
+    { cardId: cards[2]._id, userId: users[0]._id, status: "uncomplete" },
+    { cardId: cards[3]._id, userId: users[0]._id, status: "completed" },
+    { cardId: cards[4]._id, userId: users[0]._id, status: "uncomplete" },
     { cardId: cards[5]._id, userId: users[0]._id, status: "uncomplete" },
+    { cardId: cards[6]._id, userId: users[0]._id, status: "uncomplete" },
+    { cardId: cards[7]._id, userId: users[0]._id, status: "uncomplete" },
+    { cardId: cards[0]._id, userId: users[1]._id, status: "completed" },
+    { cardId: cards[1]._id, userId: users[1]._id, status: "completed" },
     { cardId: cards[2]._id, userId: users[1]._id, status: "completed" },
-    { cardId: cards[4]._id, userId: users[1]._id, status: "completed" }
+    { cardId: cards[3]._id, userId: users[1]._id, status: "uncomplete" },
+    { cardId: cards[4]._id, userId: users[1]._id, status: "completed" },
+    { cardId: cards[5]._id, userId: users[1]._id, status: "completed" },
+    { cardId: cards[6]._id, userId: users[1]._id, status: "uncomplete" },
+    { cardId: cards[7]._id, userId: users[1]._id, status: "uncomplete" }
   ]);
   console.log("✓ Complete records created:", completes.length);
 

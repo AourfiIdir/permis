@@ -9,7 +9,7 @@ export const createListSchema = z.object({
     })
     .min(2, "Name must be at least 2 characters")
     .max(100, "Name cannot exceed 100 characters")
-    .trim(),
+    .trim().optional(),
 
   description: z
     .string({
@@ -24,7 +24,7 @@ export const createListSchema = z.object({
       required_error: "createdBy is required",
       invalid_type_error: "createdBy must be a valid user ID",
     })
-    .regex(/^[0-9a-fA-F]{24}$/, "createdBy must be a valid MongoDB ObjectId"),
+    .regex(/^[0-9a-fA-F]{24}$/, "createdBy must be a valid MongoDB ObjectId").optional(),
 
   cards: z
     .array(

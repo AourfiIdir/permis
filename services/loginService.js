@@ -20,8 +20,7 @@ export function logout(req, res) {
 
 
 //end point to return a new toke  with a refresh token provided
-export function refresh(req, res) {
-    //const tokenRef = req.cookies.refreshToken;
+export async function refresh(req, res) {
     const tokenRef = req.body.refreshToken;
     if (!tokenRef) {
         return res.status(401).json({ error: "No refresh token provided" });
@@ -30,15 +29,21 @@ export function refresh(req, res) {
     jwt.verify(
         tokenRef,
         process.env.JWT_SECRET_KEY,
-        (err, user) => {
+        async (err, user) => {
             if (err) {
                 return res.status(403).json({ error: "Not authorized" });
             }
-            const role1 = user.role;
-            const payload = {
-                id: user._id,
-                role:role1
+            
+            // Verify user still exists in database
+            const existingUser = await User.findById(user.id);
+            if (!existingUser) {
+                return res.status(403).json({ error: "User no longer exists" });
             }
+
+            const payload = {
+                id: user.id,
+                role: existingUser.role
+            };
             const newAccessToken = createToken(payload);
             res.status(200).json({ token: newAccessToken });
         }
@@ -64,13 +69,9 @@ export default async function login(req, res) {
             role: user.role
         };
 
-        const accessToken = createToken(payload);
+        const accessToken = createToken(payload,"30d");
 
-        const accessRefresh = jwt.sign(
-            payload,
-            process.env.JWT_SECRET_KEY
-            ,{ expiresIn: "7d" }
-        );
+        const accessRefresh = createToken(payload,"7d");
 
         res.status(200).json({ token: accessToken , refreshToken:accessRefresh});
         console.log("User logged in:", username);
