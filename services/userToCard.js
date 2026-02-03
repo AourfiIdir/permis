@@ -114,14 +114,15 @@ export async function getHitCards(req, res) {
   const userId = req.user.id;
 
   try {
-    const cards = await UserToCard.find({ userId, hit: {$gt:0} });
+    let cards = await UserToCard.find({ userId, hit: {$gt:0} });
 
     if (cards.length === 0) {
+      console.log("no cards")
       return res.status(404).json({
         message: "No cards found",
       });
     }
-    cards = cards.map((card)=>{
+    cards = cards.map((card)=>{ 
       return card.cardId
     })
     return res.status(200).json({ cards
@@ -133,6 +134,7 @@ export async function getHitCards(req, res) {
     });
   }
 }
+// ...existing code...
 export async function modifyHit(req, res) {
   const userId = req.user.id;
   const { cardId } = req.params;
@@ -147,15 +149,20 @@ export async function modifyHit(req, res) {
 
     const incrementValue = action === "inc" ? 1 : -1;
 
+    const query =
+      action === "dec"
+        ? { userId, cardId, hit: { $gt: 0 } }
+        : { userId, cardId };
+
     const updatedCard = await UserToCard.findOneAndUpdate(
-      { userId, cardId },
+      query,
       { $inc: { hit: incrementValue } },
-      { new: true } // return updated document
+      { new: true }
     );
 
     if (!updatedCard) {
-      return res.status(404).json({
-        message: "Card not found for this user",
+      return res.status(400).json({
+        message: "Hit cannot go below 0 or card not found",
       });
     }
 
@@ -170,3 +177,4 @@ export async function modifyHit(req, res) {
     });
   }
 }
+// ...existing code...
