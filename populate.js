@@ -224,19 +224,18 @@ try {
   },
 
     {
-      name: "Road Signs",
-      description: "Learn common road signs",
-      category: "learning-signs",
-      imageURI: "https://res.cloudinary.com/dcucbns8r/image/upload/v1769699562/danger_train_compressed_page-0001_kev3c6.jpg",
-      content: { topics: ["stop sign", "yield sign", "speed limit"], level: "beginner" }
-    },
-    {
-      name: "Traffic Order Learning",
-      description: "Master traffic rules and order",
-      category: "learning-order",
-      imageURI: "https://res.cloudinary.com/dcucbns8r/image/upload/v1769699562/danger_train_compressed_page-0001_kev3c6.jpg",
-      content: { topics: ["intersection rules", "lane changes", "right of way"], level: "intermediate" }
-    },
+  name: "Panneau STOP",
+  description: "Apprendre le panneau STOP",
+  category: "learning-signs",
+  imageURI:
+    "https://res.cloudinary.com/dcucbns8r/image/upload/v1769699562/danger_train_compressed_page-0001_kev3c6.jpg",
+  content: {
+    meaning: "Arrêt obligatoire à l’intersection",
+    where: "À un carrefour dangereux ou à visibilité réduite",
+    do: "Je m’arrête complètement, je regarde à gauche et à droite, puis je repars si la voie est libre",
+    mistake: "Ralentir sans s’arrêter complètement"
+  }
+},
     {
       name: "Traffic Penalties",
       description: "Learn about traffic penalties",
@@ -284,62 +283,59 @@ try {
 
   // Create Lists
   const lists = await List.insertMany([
-  {
-    name: "Beginner Learning Path",
-    description: "Start your driving license journey",
-    createdBy: users[0]._id,
-    cards: [cards[14]._id, cards[17]._id] // Road Signs + General Questions
-  },
-  {
-    name: "Intermediate Training",
-    description: "Advanced driving rules",
-    createdBy: users[0]._id,
-    cards: [cards[15]._id, cards[16]._id] // Order + Penalties
-  },
-  {
-    name: "Quiz Practice",
-    description: "Test your knowledge",
-    createdBy: users[1]._id,
-    cards: [cards[18]._id, cards[19]._id, cards[20]._id, cards[21]._id]
-  }
-]);
-
+    {
+      name: "Beginner Learning Path",
+      description: "Start your driving license journey",
+      createdBy: users[0]._id,
+      cards: [cards[0]._id, cards[3]._id]
+    },
+    {
+      name: "Intermediate Training",
+      description: "Advanced driving rules",
+      createdBy: users[0]._id,
+      cards: [cards[1]._id, cards[2]._id]
+    },
+    {
+      name: "Quiz Practice",
+      description: "Test your knowledge",
+      createdBy: users[1]._id,
+      cards: [cards[4]._id, cards[5]._id, cards[6]._id, cards[7]._id]
+    }
+  ]);
+  console.log("✓ Lists created:", lists.length);
 
   // Create UserToCard (Complete) - entries for all cards
- const completes = [];
-
-cards.forEach(card => {
-  completes.push({
-    cardId: card._id,
-    userId: users[0]._id,
-    status: "completed"
-  });
-
-  completes.push({
-    cardId: card._id,
-    userId: users[1]._id,
-    status: "uncomplete"
-  });
-});
-
-await Complete.insertMany(completes);
-
+  const completes = await Complete.insertMany([
+    { cardId: cards[0]._id, userId: users[0]._id, status: "completed" },
+    { cardId: cards[1]._id, userId: users[0]._id, status: "uncomplete" },
+    { cardId: cards[2]._id, userId: users[0]._id, status: "uncomplete" },
+    { cardId: cards[3]._id, userId: users[0]._id, status: "completed" },
+    { cardId: cards[4]._id, userId: users[0]._id, status: "uncomplete" },
+    { cardId: cards[5]._id, userId: users[0]._id, status: "uncomplete" },
+    { cardId: cards[6]._id, userId: users[0]._id, status: "uncomplete" },
+    { cardId: cards[7]._id, userId: users[0]._id, status: "uncomplete" },
+    { cardId: cards[0]._id, userId: users[1]._id, status: "completed" },
+    { cardId: cards[1]._id, userId: users[1]._id, status: "completed" },
+    { cardId: cards[2]._id, userId: users[1]._id, status: "completed" },
+    { cardId: cards[3]._id, userId: users[1]._id, status: "uncomplete" },
+    { cardId: cards[4]._id, userId: users[1]._id, status: "completed" },
+    { cardId: cards[5]._id, userId: users[1]._id, status: "completed" },
+    { cardId: cards[6]._id, userId: users[1]._id, status: "uncomplete" },
+    { cardId: cards[7]._id, userId: users[1]._id, status: "uncomplete" }
+  ]);
   console.log("✓ Complete records created:", completes.length);
 
   // Create ListToItem (Contien)
- const contiens = await Contien.insertMany([
-  { listId: lists[0]._id, CardId: cards[14]._id },
-  { listId: lists[0]._id, CardId: cards[17]._id },
-
-  { listId: lists[1]._id, CardId: cards[15]._id },
-  { listId: lists[1]._id, CardId: cards[16]._id },
-
-  { listId: lists[2]._id, CardId: cards[18]._id },
-  { listId: lists[2]._id, CardId: cards[19]._id },
-  { listId: lists[2]._id, CardId: cards[20]._id },
-  { listId: lists[2]._id, CardId: cards[21]._id }
-]);
-
+  const contiens = await Contien.insertMany([
+    { listId: lists[0]._id, CardId: cards[0]._id },
+    { listId: lists[0]._id, CardId: cards[3]._id },
+    { listId: lists[1]._id, CardId: cards[1]._id },
+    { listId: lists[1]._id, CardId: cards[2]._id },
+    { listId: lists[2]._id, CardId: cards[4]._id },
+    { listId: lists[2]._id, CardId: cards[5]._id },
+    { listId: lists[2]._id, CardId: cards[6]._id },
+    { listId: lists[2]._id, CardId: cards[7]._id }
+  ]);
   console.log("✓ ListToItem records created:", contiens.length);
 
   // Create Progress
