@@ -393,25 +393,26 @@ try {
 
   // Create Lists
   const lists = await List.insertMany([
-    {
-      name: "Beginner Learning Path",
-      description: "Start your driving license journey",
-      createdBy: users[0]._id,
-      cards: [cards[0]._id, cards[3]._id]
-    },
-    {
-      name: "Intermediate Training",
-      description: "Advanced driving rules",
-      createdBy: users[0]._id,
-      cards: [cards[1]._id, cards[2]._id]
-    },
-    {
-      name: "Quiz Practice",
-      description: "Test your knowledge",
-      createdBy: users[1]._id,
-      cards: [cards[4]._id, cards[5]._id, cards[6]._id, cards[7]._id]
-    }
-  ]);
+     {
+    name: "Beginner Learning Path",
+    description: "Start your driving license journey",
+    createdBy: users[0]._id,
+    cards: [cards[14]._id, cards[17]._id] // Road Signs + General Questions
+  },
+  {
+    name: "Intermediate Training",
+    description: "Advanced driving rules",
+    createdBy: users[0]._id,
+    cards: [cards[15]._id, cards[16]._id] // Order + Penalties
+  },
+  {
+    name: "Quiz Practice",
+    description: "Test your knowledge",
+    createdBy: users[1]._id,
+    cards: [cards[18]._id, cards[19]._id, cards[20]._id, cards[21]._id]
+  }
+]);
+
   console.log("✓ Lists created:", lists.length);
 
   const completes = [
@@ -435,86 +436,13 @@ try {
     )
   ))
 ];
+  
+  console.log("✓ Completes created:", completes.length);
 
-/*
-  // Create UserToCard (Complete) - entries for all cards
-  const completes = await Complete.insertMany([
-    { cardId: cards[0]._id, userId: users[0]._id, status: "completed" },
-    { cardId: cards[1]._id, userId: users[0]._id, status: "uncomplete" },
-    { cardId: cards[2]._id, userId: users[0]._id, status: "uncomplete" },
-    { cardId: cards[3]._id, userId: users[0]._id, status: "completed" },
-    { cardId: cards[4]._id, userId: users[0]._id, status: "uncomplete" },
-    { cardId: cards[5]._id, userId: users[0]._id, status: "uncomplete" },
-    { cardId: cards[6]._id, userId: users[0]._id, status: "uncomplete" },
-    { cardId: cards[7]._id, userId: users[0]._id, status: "uncomplete" },
-      { cardId: cards[8]._id, userId: users[0]._id, status: "uncomplete" },
-      { cardId: cards[9]._id, userId: users[0]._id, status: "uncomplete" },
-      { cardId: cards[10]._id, userId: users[0]._id, status: "uncomplete" },
-      { cardId: cards[11]._id, userId: users[0]._id, status: "uncomplete" },
-      { cardId: cards[12]._id, userId: users[0]._id, status: "uncomplete" },
-    { cardId: cards[0]._id, userId: users[1]._id, status: "completed" },
-    { cardId: cards[1]._id, userId: users[1]._id, status: "completed" },
-    { cardId: cards[2]._id, userId: users[1]._id, status: "completed" },
-    { cardId: cards[3]._id, userId: users[1]._id, status: "uncomplete" },
-    { cardId: cards[4]._id, userId: users[1]._id, status: "completed" },
-    { cardId: cards[5]._id, userId: users[1]._id, status: "completed" },
-    { cardId: cards[6]._id, userId: users[1]._id, status: "uncomplete" },
-    { cardId: cards[7]._id, userId: users[1]._id, status: "uncomplete" }
-  ]);*/
-  console.log("✓ Complete records created:", completes.length);
-
-  // Create ListToItem (Contien)
-  const contiens = await Contien.insertMany([
-    { listId: lists[0]._id, CardId: cards[0]._id },
-    { listId: lists[0]._id, CardId: cards[3]._id },
-    { listId: lists[1]._id, CardId: cards[1]._id },
-    { listId: lists[1]._id, CardId: cards[2]._id },
-    { listId: lists[2]._id, CardId: cards[4]._id },
-    { listId: lists[2]._id, CardId: cards[5]._id },
-    { listId: lists[2]._id, CardId: cards[6]._id },
-    { listId: lists[2]._id, CardId: cards[7]._id }
-  ]);
-  console.log("✓ ListToItem records created:", contiens.length);
-
-  // Create Progress
-  const progresses = await Progress.insertMany([
-    { type: "quiz-completed", userId: users[0]._id, points: 150 },
-    { type: "learning-completed", userId: users[0]._id, points: 200 },
-    { type: "quiz-completed", userId: users[1]._id, points: 180 },
-    { type: "learning-completed", userId: users[1]._id, points: 250 }
-  ]);
-  console.log("✓ Progress records created:", progresses.length);
-
-  // Create Mistakes
-  const mistakes = await Mistake.insertMany([
-  { user: users[0]._id, card: cards[19]._id, mistake: "Wrong answer on question 5" },
-  { user: users[0]._id, card: cards[18]._id, mistake: "Confused stop sign with yield" },
-  { user: users[1]._id, card: cards[20]._id, mistake: "Incorrect penalty amount" }
-]);
-
-  console.log("✓ Mistakes created:", mistakes.length);
-
-  // Seed EmailOtp for emails NOT in Users (to match signinService flow)
-  const signupEmails = [
-    { email: "signup1@example.com", otp: "123456" },
-    { email: "signup2@example.com", otp: "654321" },
-    { email: "signup3@example.com", otp: "999999" }
-  ];
-  const expiresInMinutes = 10;
-  const emailOtps = await Promise.all(
-    signupEmails.map(async ({ email, otp }) => ({
-      email,
-      otpHash: await bcrypt.hash(otp, 10),
-      expiresAt: new Date(Date.now() + expiresInMinutes * 60 * 1000)
-    }))
-  );
-  await EmailOtp.insertMany(emailOtps);
-  console.log("✓ EmailOtp records created:", emailOtps.length);
-
-  console.log("\n✅ Database populated successfully!");
-} catch (err) {
-  console.error("❌ Error:", err.message);
+} catch (error) {
+  console.error("Error during population:", error);
 } finally {
-  await mongoose.disconnect();
-  console.log("Database connection closed");
+  await mongoose.connection.close();
+  console.log("✓ Database connection closed");
 }
+
