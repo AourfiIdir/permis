@@ -279,6 +279,15 @@ try {
       content: { topics: ["vehicle maintenance", "safety"], level: "beginner" }
     },
     {
+      name: "General Questions",
+      description: "General driving knowledge questions",
+      category: "learning-order",
+      imageURI: "https://res.cloudinary.com/dcucbns8r/image/upload/v1769699562/danger_train_compressed_page-0001_kev3c6.jpg",
+      content: { topics: ["vehicle maintenance", "safety"], level: "beginner" }
+    },
+
+
+    {
       name: "Signs Quiz",
       description: "Test your knowledge on road signs",
       category: "quiz-signs",
@@ -332,6 +341,29 @@ try {
   ]);
   console.log("✓ Lists created:", lists.length);
 
+  const completes = [
+  ...(await Promise.all(
+    cards.map(card =>
+      Complete.create({
+        cardId: card._id,
+        userId: users[0]._id,
+        status: "uncomplete"
+      })
+    )
+  )),
+
+  ...(await Promise.all(
+    cards.map(card =>
+      Complete.create({
+        cardId: card._id,
+        userId: users[1]._id,
+        status: "uncomplete"
+      })
+    )
+  ))
+];
+
+/*
   // Create UserToCard (Complete) - entries for all cards
   const completes = await Complete.insertMany([
     { cardId: cards[0]._id, userId: users[0]._id, status: "completed" },
@@ -342,6 +374,11 @@ try {
     { cardId: cards[5]._id, userId: users[0]._id, status: "uncomplete" },
     { cardId: cards[6]._id, userId: users[0]._id, status: "uncomplete" },
     { cardId: cards[7]._id, userId: users[0]._id, status: "uncomplete" },
+      { cardId: cards[8]._id, userId: users[0]._id, status: "uncomplete" },
+      { cardId: cards[9]._id, userId: users[0]._id, status: "uncomplete" },
+      { cardId: cards[10]._id, userId: users[0]._id, status: "uncomplete" },
+      { cardId: cards[11]._id, userId: users[0]._id, status: "uncomplete" },
+      { cardId: cards[12]._id, userId: users[0]._id, status: "uncomplete" },
     { cardId: cards[0]._id, userId: users[1]._id, status: "completed" },
     { cardId: cards[1]._id, userId: users[1]._id, status: "completed" },
     { cardId: cards[2]._id, userId: users[1]._id, status: "completed" },
@@ -350,7 +387,7 @@ try {
     { cardId: cards[5]._id, userId: users[1]._id, status: "completed" },
     { cardId: cards[6]._id, userId: users[1]._id, status: "uncomplete" },
     { cardId: cards[7]._id, userId: users[1]._id, status: "uncomplete" }
-  ]);
+  ]);*/
   console.log("✓ Complete records created:", completes.length);
 
   // Create ListToItem (Contien)
