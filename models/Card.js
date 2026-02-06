@@ -21,7 +21,7 @@ const cardSchema = new mongoose.Schema({
     },
     imageURI: {
         type: String,
-        required: true,
+        required: false,
         trim: true
     }
 

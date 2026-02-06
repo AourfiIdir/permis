@@ -1,16 +1,32 @@
 import User from "../models/User.js";
 import EmailOtp from "../models/EmailOtp.js";
+import dotenv from 'dotenv';
+dotenv.config();
 import bcrypt from "bcrypt";
 import crypto from "crypto";
 import { sendOtpEmail } from "../utilityFuncs/emailSender.js";
 import { OAuth2Client } from "google-auth-library";
 import jwt from "jsonwebtoken";
-import dotenv from 'dotenv';
-dotenv.config();
-
 
 // Google OAuth client
-const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+const client = new OAuth2Client(process.env.GOOGLE_WEB_CLIENT_ID);
+
+// ======== Helper: Generate Tokens ========
+function generateTokens(userId, role) {
+  const token = jwt.sign(
+    { userId, role },
+    process.env.JWT_SECRET_KEY,
+    { expiresIn: "7d" }
+  );
+  
+  const refreshToken = jwt.sign(
+    { userId, role, type: 'refresh' },
+    process.env.JWT_REFRESH_SECRET || process.env.JWT_SECRET_KEY,
+    { expiresIn: "30d" }
+  );
+  
+  return { token, refreshToken };
+}
 
 // ======== OTP Request ========
 export async function requestOtp(req, res) {
@@ -82,18 +98,26 @@ export async function signin(req, res) {
       provider: "local",
     });
 
-    // Generate JWT
-    const token = jwt.sign(
-      { userId: user._id, role: user.role },
-      process.env.JWT_SECRET_KEY,
-      { expiresIn: "7d" }
-    );
+    // Generate tokens
+    const { token, refreshToken } = generateTokens(user._id, user.role);
 
     return res.status(201).json({
       ok: true,
       message: "User created successfully",
-      user,
+      user: {
+        _id: user._id,
+        nom: user.nom,
+        prenom: user.prenom,
+        username: user.username,
+        email: user.email,
+        provider: user.provider,
+        role: user.role,
+        sexe: user.sexe,
+        wilaya: user.wilaya,
+        age: user.age,
+      },
       token,
+      refreshToken,
     });
   } catch (err) {
     if (err.code === 11000) {
@@ -142,85 +166,102 @@ export async function resendOtp(req, res) {
 
 // ======== Google Sign-In ========
 export async function googleSignin(req, res) {
-  const { idToken, isSignup } = req.body;
+  const { idToken } = req.body;
 
   try {
     if (!idToken) {
+      console.error("❌ No idToken provided");
       return res.status(400).json({ ok: false, message: "Google token missing" });
     }
 
+    console.log("🔵 Verifying Google ID token...");
+
+    // Verify token with Google
     const ticket = await client.verifyIdToken({
       idToken,
       audience: process.env.GOOGLE_WEB_CLIENT_ID,
     });
+    
     const payload = ticket.getPayload();
     const { sub: googleId, email, given_name, family_name, email_verified } = payload;
 
+    console.log("🔵 Google token verified:", { email, googleId, verified: email_verified });
+
     if (!email_verified) {
-      return res.status(401).json({ ok: false, message: "Email not verified" });
+      console.error("❌ Email not verified by Google");
+      return res.status(401).json({ ok: false, message: "Email not verified by Google" });
     }
 
     // Check if user exists
     let user = await User.findOne({ email });
 
-    // ===== SIGNUP =====
-    if (isSignup) {
-      if (user) {
-        return res.status(400).json({
-          ok: false,
-          message: user.provider === "local"
-            ? "This email is registered with password. Use that to login."
-            : "This Google account is already used. Please login instead.",
-        });
-      }
-
-      // Create new Google user
+    // If user doesn't exist: create automatically
+    if (!user) {
+      console.log("🔵 Creating new Google user...");
+      
       user = await User.create({
         email,
         googleId,
-        prenom: given_name,
-        nom: family_name,
+        prenom: given_name || "",
+        nom: family_name || "",
         provider: "google",
         role: "user",
-        username: email.split("@")[0],
+        username: email.split("@")[0] + "_" + Math.random().toString(36).substr(2, 5),
       });
-
-      const token = jwt.sign({ userId: user._id, role: user.role }, process.env.JWT_SECRET_KEY, { expiresIn: "7d" });
-      return res.status(201).json({ ok: true, message: "Google sign-up successful", user, token });
-    }
-
-    // ===== LOGIN =====
-    else {
-      // Case 1: No user with this email
-      if (!user) {
-        return res.status(404).json({
-          ok: false,
-          message: "No account found with this Google account. Please sign up first.",
-        });
-      }
-
-      // Case 2: User exists but not Google
+      
+      console.log("✅ New Google user created:", user._id);
+    } else {
+      console.log("🔵 Existing user found:", user._id);
+      
+      // If user exists but is local: block Google login
       if (user.provider !== "google") {
+        console.error("❌ Email registered with password, not Google");
         return res.status(400).json({
           ok: false,
-          message: "This email is registered with password. Please use that to login.",
+          message: "This email is registered with password. Use normal login.",
         });
       }
 
-      // Case 3: Google account mismatch (someone trying to use a different Google account)
+      // If Google ID mismatch: block login
       if (user.googleId !== googleId) {
+        console.error("❌ Google ID mismatch");
         return res.status(401).json({
           ok: false,
           message: "This Google account is not linked to this user.",
         });
       }
-
-      // SUCCESS: correct Google account for login
-      const token = jwt.sign({ userId: user._id, role: user.role }, process.env.JWT_SECRET_KEY, { expiresIn: "7d" });
-      return res.status(200).json({ ok: true, message: "Google login successful", user, token });
     }
+
+    // Generate tokens
+    const { token, refreshToken } = generateTokens(user._id, user.role);
+
+    console.log("✅ Google login successful for user:", user._id);
+
+    return res.status(200).json({
+      ok: true,
+      message: "Google login/signup successful",
+      user: {
+        _id: user._id,
+        nom: user.nom,
+        prenom: user.prenom,
+        username: user.username,
+        email: user.email,
+        provider: user.provider,
+        role: user.role,
+        sexe: user.sexe,
+        wilaya: user.wilaya,
+        age: user.age,
+      },
+      token,
+      refreshToken,
+    });
+
   } catch (err) {
-    console.error(err);
-    return res.status(401).json({ ok: false, message: "Invalid Google token" });
+    console.error("❌ Google signin error:", err);
+    return res.status(401).json({ 
+      ok: false, 
+      message: "Invalid Google token",
+      error: process.env.NODE_ENV === 'development' ? err.message : undefined
+    });
   }
 }
