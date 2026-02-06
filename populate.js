@@ -287,34 +287,107 @@ try {
     },
 
 
-    {
-      name: "Signs Quiz",
-      description: "Test your knowledge on road signs",
-      category: "quiz-signs",
-      imageURI: "https://res.cloudinary.com/dcucbns8r/image/upload/v1769699562/danger_train_compressed_page-0001_kev3c6.jpg",
-      content: { questions: 15, difficulty: "medium" }
-    },
-    {
-      name: "Order Quiz",
-      description: "Quiz on traffic rules and order",
-      category: "quiz-order",
-      imageURI: "https://res.cloudinary.com/dcucbns8r/image/upload/v1769699562/danger_train_compressed_page-0001_kev3c6.jpg",
-      content: { questions: 10, difficulty: "medium" }
-    },
-    {
-      name: "Penalties Quiz",
-      description: "Quiz on traffic penalties and fines",
-      category: "quiz-penalties",
-      imageURI: "https://res.cloudinary.com/dcucbns8r/image/upload/v1769699562/danger_train_compressed_page-0001_kev3c6.jpg",
-      content: { questions: 12, difficulty: "hard" }
-    },
-    {
-      name: "General Questions Quiz",
-      description: "Test general driving knowledge",
-      category: "quiz-general-question",
-      imageURI: "https://res.cloudinary.com/dcucbns8r/image/upload/v1769699562/danger_train_compressed_page-0001_kev3c6.jpg",
-      content: { questions: 20, difficulty: "medium" }
-    }
+  {
+    name: "Signs Quiz",
+    description: "Test your knowledge on road signs",
+    category: "quiz-signs",
+    imageURI: "https://res.cloudinary.com/dcucbns8r/image/upload/v1769699562/danger_train_compressed_page-0001_kev3c6.jpg",
+    content: [
+      {
+        question: "What does this sign mean?",
+        answers: ["Stop", "Go", "Slow down"],
+        correctAnswer: 0
+      },
+      {
+        question: "This triangular sign indicates?",
+        answers: ["Yield", "No entry", "Pedestrian crossing"],
+        correctAnswer: 0
+      }
+    ]
+  },
+  {
+    name: "Order Quiz",
+    description: "Quiz on traffic rules and order",
+    category: "quiz-order",
+    imageURI: "https://res.cloudinary.com/dcucbns8r/image/upload/v1769699562/danger_train_compressed_page-0001_kev3c6.jpg",
+    content: [
+      {
+        question: "Who has the right of way at a four-way stop?",
+        answers: ["The car on the left", "The car on the right", "The first car to arrive"],
+        correctAnswer: 2
+      },
+      {
+        question: "When can you pass another car on the right?",
+        answers: ["Always", "Only on multi-lane roads", "Never"],
+        correctAnswer: 1
+      }
+    ]
+  },
+  {
+    name: "Penalties Quiz",
+    description: "Quiz on traffic penalties and fines",
+    category: "quiz-penalties",
+    imageURI: "https://res.cloudinary.com/dcucbns8r/image/upload/v1769699562/danger_train_compressed_page-0001_kev3c6.jpg",
+    content: [
+      {
+        question: "Speeding in a school zone can result in?",
+        answers: ["Warning", "Heavy fine", "No penalty"],
+        correctAnswer: 1
+      },
+      {
+        question: "Driving under the influence penalty includes?",
+        answers: ["License suspension", "Fine", "Both"],
+        correctAnswer: 2
+      }
+    ]
+  },
+  {
+    name: "General Questions Quiz",
+    description: "Test general driving knowledge",
+    category: "quiz-general-question",
+    imageURI: "https://res.cloudinary.com/dcucbns8r/image/upload/v1769699562/danger_train_compressed_page-0001_kev3c6.jpg",
+    content: [
+      {
+        question: "What is the minimum tread depth for tires?",
+        answers: ["1.6 mm", "2 mm", "3 mm"],
+        correctAnswer: 0
+      },
+      {
+        question: "When should you use headlights?",
+        answers: ["At night", "During rain", "Both"],
+        correctAnswer: 2
+      }
+    ]
+  },
+
+  // --- New cards ---
+  {
+    name: "Signs Identification Quiz",
+    description: "Identify road signs correctly",
+    category: "quiz-signs-advanced",
+    imageURI: "https://res.cloudinary.com/dcucbns8r/image/upload/v1769699562/danger_train_compressed_page-0001_kev3c6.jpg",
+    content: [
+      {
+        question: "What does a circular red-bordered sign indicate?",
+        answers: ["Prohibition", "Mandatory", "Information"],
+        correctAnswer: 0
+      }
+    ]
+  },
+  {
+    name: "Emergency Situations Quiz",
+    description: "Test knowledge on emergency driving situations",
+    category: "quiz-emergency",
+    imageURI: "https://res.cloudinary.com/dcucbns8r/image/upload/v1769699562/danger_train_compressed_page-0001_kev3c6.jpg",
+    content: [
+      {
+        question: "What should you do if your brakes fail?",
+        answers: ["Shift to a lower gear", "Turn off engine", "Accelerate"],
+        correctAnswer: 0
+      }
+    ]
+  }
+
   ]);
   console.log("✓ Cards created:", cards.length);
 
