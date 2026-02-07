@@ -269,22 +269,285 @@ try {
       description: "Learn about traffic penalties",
       category: "learning-penalties",
       imageURI: "https://res.cloudinary.com/dcucbns8r/image/upload/v1769699562/danger_train_compressed_page-0001_kev3c6.jpg",
-      content: { topics: ["speeding penalties", "parking fines"], level: "intermediate" }
+      content: {level: "intermediate" }
     },
     {
       name: "General Questions",
       description: "General driving knowledge questions",
       category: "learning-general-question",
       imageURI: "https://res.cloudinary.com/dcucbns8r/image/upload/v1769699562/danger_train_compressed_page-0001_kev3c6.jpg",
-      content: { topics: ["vehicle maintenance", "safety"], level: "beginner" }
+      content: {level: "beginner" }
     },
     {
       name: "General Questions",
       description: "General driving knowledge questions",
       category: "learning-order",
       imageURI: "https://res.cloudinary.com/dcucbns8r/image/upload/v1769699562/danger_train_compressed_page-0001_kev3c6.jpg",
-      content: { topics: ["vehicle maintenance", "safety"], level: "beginner" }
+      content: {level: "beginner" }
     },
+    
+
+    
+  {
+    "name": "Amendes et excès de vitesse",
+    "description": "Testez vos connaissances sur les amendes en Algérie",
+    "category": "quiz-penalties",
+    "imageURI": "https://res.cloudinary.com/dcucbns8r/image/upload/v1769699562/danger_train_compressed_page-0001_kev3c6.jpg",
+    "content": [
+      {
+        "question": "Excès de vitesse en ville : quelle sanction ?",
+        "answers": ["Avertissement", "Amende lourde", "Pas de sanction"],
+        "correctAnswer": 1
+      },
+      {
+        "question": "Conduite sous influence : conséquence ?",
+        "answers": ["Suspension de permis", "Amende", "Les deux"],
+        "correctAnswer": 2
+      }
+    ]
+  },
+  {
+    "name": "Infractions au stationnement",
+    "description": "Tout savoir sur les infractions liées au stationnement",
+    "category": "quiz-penalties",
+    "imageURI": "https://res.cloudinary.com/dcucbns8r/image/upload/v1769699562/danger_train_compressed_page-0001_kev3c6.jpg",
+    "content": [
+      {
+        "question": "Stationnement interdit : sanction ?",
+        "answers": ["Aucune sanction", "Amende", "Enlèvement du véhicule"],
+        "correctAnswer": 2
+      },
+      {
+        "question": "Stationnement sur passage piéton : quel risque ?",
+        "answers": ["Amende", "Avertissement", "Retrait de points"],
+        "correctAnswer": 0
+      }
+    ]
+  },
+  {
+    "name": "Infractions générales",
+    "description": "Questions sur les infractions courantes",
+    "category": "quiz-penalties",
+    "imageURI": "https://res.cloudinary.com/dcucbns8r/image/upload/v1769699562/danger_train_compressed_page-0001_kev3c6.jpg",
+    "content": [
+      {
+        "question": "Non-port de ceinture de sécurité : sanction ?",
+        "answers": ["Amende", "Avertissement", "Pas de sanction"],
+        "correctAnswer": 0
+      },
+      {
+        "question": "Téléphone au volant : conséquence ?",
+        "answers": ["Amende", "Suspension de permis", "Les deux"],
+        "correctAnswer": 2
+      }
+    ]
+  },
+  {
+    "name": "Quiz général 1",
+    "description": "Testez vos connaissances générales sur le code de la route",
+    "category": "quiz-general-question",
+    "imageURI": "https://res.cloudinary.com/dcucbns8r/image/upload/v1769699562/danger_train_compressed_page-0001_kev3c6.jpg",
+    "content": [
+      {
+        "question": "Profondeur minimale des rainures des pneus ?",
+        "answers": ["1,6 mm", "2 mm", "3 mm"],
+        "correctAnswer": 0
+      },
+      {
+        "question": "Quand allumer les phares ?",
+        "answers": ["La nuit", "Sous la pluie", "Les deux"],
+        "correctAnswer": 2
+      }
+    ]
+  },
+  {
+    "name": "Quiz général 2",
+    "description": "Connaissances supplémentaires sur le code de la route",
+    "category": "quiz-general-question",
+    "imageURI": "https://res.cloudinary.com/dcucbns8r/image/upload/v1769699562/danger_train_compressed_page-0001_kev3c6.jpg",
+    "content": [
+      {
+        "question": "Distance de sécurité minimale en ville ?",
+        "answers": ["1 m", "2 m", "3 m"],
+        "correctAnswer": 1
+      },
+      {
+        "question": "Quand utiliser le clignotant en ville ?",
+        "answers": ["Avant chaque virage", "Avant chaque dépassement", "Les deux"],
+        "correctAnswer": 2
+      }
+    ]
+  },
+  {
+    "name": "Quiz panneaux 1",
+    "description": "Identifier les panneaux routiers classiques",
+    "category": "quiz-signs-advanced",
+    "imageURI": "https://res.cloudinary.com/dcucbns8r/image/upload/v1769699562/danger_train_compressed_page-0001_kev3c6.jpg",
+    "content": [
+      {
+        "question": "Que signifie un panneau rond avec bord rouge ?",
+        "answers": ["Interdiction", "Obligation", "Information"],
+        "correctAnswer": 0
+      },
+      {
+        "question": "Que signifie un panneau bleu avec flèche blanche ?",
+        "answers": ["Sens obligatoire", "Interdiction", "Information"],
+        "correctAnswer": 0
+      }
+    ]
+  },
+  {
+    "name": "Quiz panneaux 2",
+    "description": "Panneaux avancés à identifier",
+    "category": "quiz-signs-advanced",
+    "imageURI": "https://res.cloudinary.com/dcucbns8r/image/upload/v1769699562/danger_train_compressed_page-0001_kev3c6.jpg",
+    "content": [
+      {
+        "question": "Panneau triangulaire rouge avec symbole de danger ?",
+        "answers": ["Danger", "Obligation", "Interdiction"],
+        "correctAnswer": 0
+      }
+    ]
+  },
+  {
+    "name": "Situations d'urgence 1",
+    "description": "Réagir correctement aux situations d'urgence routière",
+    "category": "quiz-emergency",
+    "imageURI": "https://res.cloudinary.com/dcucbns8r/image/upload/v1769699562/danger_train_compressed_page-0001_kev3c6.jpg",
+    "content": [
+      {
+        "question": "Que faire si vos freins lâchent ?",
+        "answers": ["Passer une vitesse inférieure", "Éteindre le moteur", "Accélérer"],
+        "correctAnswer": 0
+      }
+    ]
+  },
+  {
+    "name": "Situations d'urgence 2",
+    "description": "Réagir correctement aux accidents et urgences",
+    "category": "quiz-emergency",
+    "imageURI": "https://res.cloudinary.com/dcucbns8r/image/upload/v1769699562/danger_train_compressed_page-0001_kev3c6.jpg",
+    "content": [
+      {
+        "question": "Que faire en cas de dérapage sur route mouillée ?",
+        "answers": ["Freiner brusquement", "Contre-braquer", "Accélérer"],
+        "correctAnswer": 1
+      }
+    ]
+  },
+  
+  {
+    "name": "Penalties Quiz",
+    "description": "Quiz sur les amendes et infractions de circulation",
+    "category": "quiz-penalties",
+    "imageURI": "https://res.cloudinary.com/dcucbns8r/image/upload/v1769699562/danger_train_compressed_page-0001_kev3c6.jpg",
+    "content": [
+      {
+        "question": "Excès de vitesse dans une zone scolaire peut entraîner ?",
+        "answers": ["Avertissement", "Amende lourde", "Pas de sanction"],
+        "correctAnswer": 1
+      },
+      {
+        "question": "Conduite sous influence d'alcool risque ?",
+        "answers": ["Amende", "Suspension de permis", "Les deux"],
+        "correctAnswer": 2
+      },
+      {
+        "question": "Non-port de ceinture de sécurité : sanction ?",
+        "answers": ["Amende", "Rien", "Points en moins"],
+        "correctAnswer": 2
+      },
+      {
+        "question": "Téléphone au volant : quelle conséquence ?",
+        "answers": ["Avertissement", "Amende", "Amende et points retirés"],
+        "correctAnswer": 2
+      }
+    ]
+  },
+  {
+    "name": "General Questions Quiz",
+    "description": "Test de connaissances générales sur la conduite",
+    "category": "quiz-general-question",
+    "imageURI": "https://res.cloudinary.com/dcucbns8r/image/upload/v1769699562/danger_train_compressed_page-0001_kev3c6.jpg",
+    "content": [
+      {
+        "question": "Profondeur minimale des pneus ?",
+        "answers": ["1.6 mm", "2 mm", "3 mm"],
+        "correctAnswer": 0
+      },
+      {
+        "question": "Quand utiliser les phares ?",
+        "answers": ["La nuit", "Sous la pluie", "Les deux"],
+        "correctAnswer": 2
+      },
+      {
+        "question": "Distance de sécurité dépend de ?",
+        "answers": ["Vitesse", "Conditions météo", "Les deux"],
+        "correctAnswer": 2
+      },
+      {
+        "question": "Lorsque vous êtes fatigué au volant ?",
+        "answers": ["Continuer", "Faire une pause", "Boire du café uniquement"],
+        "correctAnswer": 1
+      }
+    ]
+  },
+  {
+    "name": "Signs Identification Quiz",
+    "description": "Identifier correctement les panneaux de signalisation",
+    "category": "quiz-signs-advanced",
+    "imageURI": "https://res.cloudinary.com/dcucbns8r/image/upload/v1769699562/danger_train_compressed_page-0001_kev3c6.jpg",
+    "content": [
+      {
+        "question": "Un panneau circulaire à bord rouge indique ?",
+        "answers": ["Interdiction", "Obligation", "Information"],
+        "correctAnswer": 0
+      },
+      {
+        "question": "Panneau triangulaire avec un point d'exclamation ?",
+        "answers": ["Danger général", "Obligation", "Stationnement interdit"],
+        "correctAnswer": 0
+      },
+      {
+        "question": "Panneau carré bleu avec symbole : rôle ?",
+        "answers": ["Indication", "Interdiction", "Obligation"],
+        "correctAnswer": 0
+      },
+      {
+        "question": "Panneau rond bleu : signification ?",
+        "answers": ["Obligation", "Interdiction", "Information"],
+        "correctAnswer": 0
+      }
+    ]
+  },
+  {
+    "name": "Emergency Situations Quiz",
+    "description": "Test sur la conduite en situation d'urgence",
+    "category": "quiz-emergency",
+    "imageURI": "https://res.cloudinary.com/dcucbns8r/image/upload/v1769699562/danger_train_compressed_page-0001_kev3c6.jpg",
+    "content": [
+      {
+        "question": "Que faire si vos freins lâchent ?",
+        "answers": ["Passer une vitesse inférieure", "Couper le moteur", "Accélérer"],
+        "correctAnswer": 0
+      },
+      {
+        "question": "Panne sur autoroute : actions correctes ?",
+        "answers": ["Allumer les warnings", "Mettre le triangle", "Les deux"],
+        "correctAnswer": 2
+      },
+      {
+        "question": "Accident mineur : première chose à faire ?",
+        "answers": ["Prendre des photos", "Appeler les secours", "Rien"],
+        "correctAnswer": 1
+      },
+      {
+        "question": "Feu moteur pendant la conduite : que faire ?",
+        "answers": ["Éteindre le moteur", "Appeler les pompiers", "Les deux"],
+        "correctAnswer": 2
+      }
+    ]
+  },
 
 
   {
@@ -386,9 +649,223 @@ try {
         correctAnswer: 0
       }
     ]
-  }
+  },
+  // Priorité à droite
+  {
+    name: "Priorité à droite classique",
+    description: "Priorité à droite à une intersection sans panneau",
+    category: "learning-order",
+    content: {
+      meaning: "Vous devez céder le passage aux véhicules venant de droite",
+      where: "Intersection classique sans panneau",
+      do: "Laisser passer le véhicule venant de droite",
+      mistake: "Passer sans vérifier la droite"
+    }
+  },
+  {
+    name: "Priorité à droite complexe",
+    description: "Intersection avec plusieurs routes, priorité à droite",
+    category: "learning-order",
+    content: {
+      meaning: "Toujours céder le passage aux véhicules venant de droite",
+      where: "Carrefour complexe",
+      do: "Ralentir et vérifier la droite",
+      mistake: "Ignorer un véhicule venant de droite"
+    }
+  },
+  {
+    name: "Priorité à droite en zone résidentielle",
+    description: "Priorité à droite dans une zone 30",
+    category: "learning-order",
+    content: {
+      meaning: "Même en zone 30, céder la priorité à droite",
+      where: "Zone résidentielle",
+      do: "Vérifier la droite avant de s'engager",
+      mistake: "Penser que la vitesse réduite suffit"
+    }
+  },
 
-  ]);
+  // Priorité à gauche
+  {
+    name: "Priorité à gauche temporaire",
+    description: "Priorité à gauche sur route temporaire ou travaux",
+    category: "learning-order",
+    content: {
+      meaning: "Vous avez priorité sur les véhicules venant de droite",
+      where: "Zone de travaux ou déviation",
+      do: "Respecter le panneau indiquant la priorité",
+      mistake: "Céder la priorité comme d'habitude à droite"
+    }
+  },
+  {
+    name: "Priorité à gauche en montagne",
+    description: "Priorité à gauche sur route étroite en montagne",
+    category: "learning-order",
+    content: {
+      meaning: "Vous avez priorité sur les véhicules venant de droite",
+      where: "Route de montagne étroite",
+      do: "S'assurer que l'autre véhicule peut s'arrêter avant de s'engager",
+      mistake: "Ne pas anticiper et bloquer le passage"
+    }
+  },
+
+  // STOP
+  {
+    name: "STOP obligatoire",
+    description: "Arrêt complet à l'intersection",
+    category: "learning-order",
+    content: {
+      meaning: "Vous devez vous arrêter complètement avant de continuer",
+      where: "Intersection avec panneau STOP",
+      do: "Arrêter le véhicule, vérifier la route puis continuer",
+      mistake: "Ne pas marquer l'arrêt complet"
+    }
+  },
+  {
+    name: "STOP temporaire en travaux",
+    description: "STOP pour déviation ou chantier",
+    category: "learning-order",
+    content: {
+      meaning: "Arrêt obligatoire à cause d'un chantier ou déviation",
+      where: "Route en travaux",
+      do: "S'arrêter et vérifier la circulation",
+      mistake: "Passer sans s'arrêter par habitude"
+    }
+  },
+
+  // Cédez le passage
+  {
+    name: "Cédez le passage classique",
+    description: "Donner la priorité aux véhicules sur la route principale",
+    category: "learning-order",
+    content: {
+      meaning: "Vous devez céder le passage aux véhicules sur la route principale",
+      where: "Entrée d'une route secondaire",
+      do: "S'arrêter ou ralentir pour laisser passer",
+      mistake: "S'engager sans vérifier"
+    }
+  },
+  {
+    name: "Cédez le passage sur rond-point",
+    description: "Priorité aux véhicules déjà engagés sur le rond-point",
+    category: "learning-order",
+    content: {
+      meaning: "Vous devez céder le passage aux véhicules déjà engagés",
+      where: "Rond-point",
+      do: "Entrer seulement quand c'est libre",
+      mistake: "Couper la priorité aux véhicules dans le rond-point"
+    }
+  },
+
+  // Fin de priorité
+  {
+    name: "Fin de route prioritaire",
+    description: "Vous quittez une route prioritaire",
+    category: "learning-order",
+    content: {
+      meaning: "Vous n'avez plus priorité, attention aux véhicules venant de droite",
+      where: "Panneau fin de route prioritaire",
+      do: "Vérifier les autres véhicules avant de continuer",
+      mistake: "Continuer sans vigilance"
+    }
+  },
+  {
+    name: "Fin de priorité après travaux",
+    description: "Fin de priorité temporaire",
+    category: "learning-order",
+    content: {
+      meaning: "Après une zone de travaux, la priorité normale reprend",
+      where: "Fin de chantier",
+      do: "Vérifier la signalisation normale",
+      mistake: "Ignorer la reprise de priorité"
+    }
+  },
+
+  // Priorité aux tramways
+  {
+    name: "Priorité aux tramways",
+    description: "Le tram a toujours priorité",
+    category: "learning-order",
+    content: {
+      meaning: "Les trams passent avant tout autre véhicule",
+      where: "Voie tramway ou croisement",
+      do: "Laisser passer le tram",
+      mistake: "Bloquer le tram ou s'engager en priorité"
+    }
+  },
+
+  // Priorité alternée
+  {
+    name: "Priorité alternée",
+    description: "Priorité alternée sur pont ou route étroite",
+    category: "learning-order",
+    content: {
+      meaning: "Les véhicules d’un côté passent avant l’autre",
+      where: "Pont étroit ou zone de travaux",
+      do: "Respecter les panneaux ou feux alternés",
+      mistake: "S’engager sans respecter la priorité alternée"
+    }
+  },
+
+  // Priorité aux piétons
+  {
+    name: "Priorité aux piétons",
+    description: "Vous devez céder le passage aux piétons",
+    category: "learning-order",
+    content: {
+      meaning: "Les piétons ont priorité sur la route",
+      where: "Passage piéton marqué",
+      do: "S'arrêter et laisser passer",
+      mistake: "Ignorer les piétons sur le passage"
+    }
+  },
+
+  // Cas spéciaux
+  {
+    name: "Priorité sur voie rétrécie",
+    description: "Une voie est rétrécie, céder si nécessaire",
+    category: "learning-order",
+    content: {
+      meaning: "Sur une voie rétrécie, la priorité peut être signalée",
+      where: "Route rétrécie, travaux ou montagne",
+      do: "Céder si panneau ou circulation dense",
+      mistake: "S’engager sans vérifier"
+    }
+  },
+  {
+    name: "Priorité aux véhicules d’urgence",
+    description: "Les véhicules prioritaires passent avant tout le monde",
+    category: "learning-order",
+    content: {
+      meaning: "Ambulances, pompiers et police ont priorité",
+      where: "Sur la route à tout moment",
+      do: "Se ranger sur le côté et laisser passer",
+      mistake: "Continuer sans céder"
+    }
+  },
+  {
+    name: "Priorité aux transports en commun",
+    description: "Certaines voies donnent priorité aux bus ou trams",
+    category: "learning-order",
+    content: {
+      meaning: "Transports en commun ont priorité sur certaines voies",
+      where: "Voies réservées aux bus/tram",
+      do: "Ne pas s’engager sur ces voies",
+      mistake: "Bloquer un bus ou tram"
+    }
+  },
+  {
+    name: "Priorité au passage à niveau",
+    description: "Priorité absolue au train",
+    category: "learning-order",
+    content: {
+      meaning: "Les trains ont priorité totale sur la route",
+      where: "Passage à niveau",
+      do: "S'arrêter si barrière fermée ou signal activé",
+      mistake: "Passer malgré le signal"
+    }
+  }
+]);
   console.log("✓ Cards created:", cards.length);
 
   // Create Lists
