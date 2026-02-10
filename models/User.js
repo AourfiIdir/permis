@@ -30,7 +30,6 @@ const UsersSchema = new mongoose.Schema(
 
     googleId: {
       type: String,
-      unique: true,
       sparse: true, // allows null for local users
     },
 
