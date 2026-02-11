@@ -118,7 +118,7 @@ export async function getHitCards(req, res) {
 
     if (cards.length === 0) {
       console.log("no cards")
-      return res.status(404).json({
+      return res.status(200).json({
         message: "No cards found",
       });
     }
