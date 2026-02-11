@@ -1,5 +1,5 @@
 import express from "express";
-import { createMistake,getMistakes,getMistakeById,updateMistake,deleteMistake, getMistakeByUserId } from "../services/mistakeService.js";
+import { createMistake,getMistakes,getMistakeById,updateMistake,deleteMistake, getMistakeByUserId,deleteMistakeByQuestion } from "../services/mistakeService.js";
 import authenticateToken from "../middleware/authenticateToken.js";
 
 const router = express.Router();
@@ -16,4 +16,5 @@ router.route("/:id").put(updateMistake);
 
 router.route("/:id").delete(deleteMistake);
 
+router.route("/deleteByQuestion").delete(deleteMistakeByQuestion);
 export default router;
