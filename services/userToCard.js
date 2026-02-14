@@ -118,7 +118,7 @@ export async function getHitCards(req, res) {
 
     if (cards.length === 0) {
       console.log("no cards")
-      return res.status(404).json({
+      return res.status(200).json({
         message: "No cards found",
       });
     }
@@ -177,4 +177,23 @@ export async function modifyHit(req, res) {
     });
   }
 }
-// ...existing code...
+
+export async function getCardsForUser(req,res){
+  const userId = req.user.id;
+  try{  
+    const result = await UserToCard.find({userId});
+    if(!result){
+      res.status(400).json({
+        message:"cant find the cards for the user "
+      })
+    }
+    res.status(200).json({
+      message:"success",
+      result
+    })
+  }catch(err){
+    res.status(500).json({
+      message:err
+    })
+  }
+}

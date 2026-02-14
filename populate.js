@@ -474,6 +474,6 @@ try {
 } catch (err) {
   console.error("❌ Error:", err.message);
 } finally {
-  await mongoose.disconnect();
-  console.log("Database connection closed");
+  await mongoose.connection.close();
+  console.log("✓ Database connection closed");
 }
