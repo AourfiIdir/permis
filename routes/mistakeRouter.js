@@ -8,7 +8,7 @@ router.use(authenticateToken);
 router.route("/").post(createMistake);
 
 router.route("/").get(getMistakes);
-
+router.route("/deleteByQuestion").delete(deleteMistakeByQuestion);
 router.route("/:id").get(getMistakeById);
 router.route("/myMistakes/:userId").get(getMistakeByUserId);
 
@@ -16,5 +16,4 @@ router.route("/:id").put(updateMistake);
 
 router.route("/:id").delete(deleteMistake);
 
-router.route("/deleteByQuestion").delete(deleteMistakeByQuestion);
 export default router;
