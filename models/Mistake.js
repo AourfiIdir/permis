@@ -13,6 +13,7 @@ const MistakeSchema = new mongoose.Schema({
   },
   mistake:{
     type:String,
+    unique:true
     required:true
   },
   
