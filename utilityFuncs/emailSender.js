@@ -6,7 +6,7 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 export async function sendOtpEmail(to, otp) {
   try {
     const { data, error } = await resend.emails.send({
-      from: "FlashFlash <onboarding@resend.dev>", // ✅ works without domain verification
+      from: "FlashFlash <no-reply@licensehero.online>", // ✅ works without domain verification
       to: to,
       subject: "Your verification code",
       text: `Your code is ${otp}. It expires in 10 minutes.`,
