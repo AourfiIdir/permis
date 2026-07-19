@@ -17,11 +17,10 @@ const cardSchema = new mongoose.Schema({
     content: {
         type: Schema.Types.Mixed,
         required: true,
-        trim: true
     },
     imageURI: {
         type: String,
-        required: true,
+        required: false,
         trim: true
     }
 
