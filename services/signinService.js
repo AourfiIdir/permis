@@ -1,34 +1,24 @@
 import User from "../models/User.js";
 import EmailOtp from "../models/EmailOtp.js";
-import dotenv from 'dotenv';
-dotenv.config();
+import Card from "../models/Card.js";
+import UserToCard from "../models/UserToCard.js";
+import createToken from "../utilityFuncs/createToken.js"
 import bcrypt from "bcrypt";
 import crypto from "crypto";
+import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
+
 import { sendOtpEmail } from "../utilityFuncs/emailSender.js";
 import { OAuth2Client } from "google-auth-library";
-import jwt from "jsonwebtoken";
+
+dotenv.config();
 
 // Google OAuth client
 const client = new OAuth2Client(process.env.GOOGLE_WEB_CLIENT_ID);
 
-// ======== Helper: Generate Tokens ========
-function generateTokens(userId, role) {
-  const token = jwt.sign(
-    { userId, role },
-    process.env.JWT_SECRET_KEY,
-    { expiresIn: "7d" }
-  );
-  
-  const refreshToken = jwt.sign(
-    { userId, role, type: 'refresh' },
-    process.env.JWT_REFRESH_SECRET || process.env.JWT_SECRET_KEY,
-    { expiresIn: "30d" }
-  );
-  
-  return { token, refreshToken };
-}
-
-// ======== OTP Request ========
+//
+// ======================= REQUEST OTP =======================
+//
 export async function requestOtp(req, res) {
   const { email } = req.body;
 
@@ -37,7 +27,7 @@ export async function requestOtp(req, res) {
       return res.status(400).json({ ok: false, message: "Email is required" });
     }
 
-    // Block OTP for Google accounts
+    // Block OTP for Google users
     const user = await User.findOne({ email });
     if (user && user.provider === "google") {
       return res.status(400).json({
@@ -49,14 +39,14 @@ export async function requestOtp(req, res) {
     // Remove old OTP
     await EmailOtp.deleteOne({ email });
 
-    // Generate new OTP
+    // Generate OTP
     const otp = crypto.randomInt(100000, 999999).toString();
     const otpHash = await bcrypt.hash(otp, 10);
-    const expiresAt = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
+
+    const expiresAt = new Date(Date.now() + 10 * 60 * 1000); // 10 min
 
     await EmailOtp.create({ email, otpHash, expiresAt });
 
-    // Send OTP via email
     await sendOtpEmail(email, otp);
 
     return res.json({ ok: true, message: "OTP sent successfully" });
@@ -66,26 +56,53 @@ export async function requestOtp(req, res) {
   }
 }
 
-// ======== OTP Sign-Up / Sign-In ========
+//
+// ======================= OTP SIGNIN / SIGNUP =======================
+//
 export async function signin(req, res) {
   const { nom, prenom, email, otp, password, sexe, wilaya, age, username } =
     req.body;
 
   try {
+    // 1. Check OTP
     const record = await EmailOtp.findOne({ email });
-    if (!record)
+    if (!record) {
       return res.status(400).json({ ok: false, message: "Code not found" });
+    }
 
-    if (record.expiresAt < new Date())
+    if (record.expiresAt < new Date()) {
       return res.status(400).json({ ok: false, message: "Code expired" });
+    }
 
-    const isValid = await bcrypt.compare(otp, record.otpHash);
-    if (!isValid)
+    const isValidOtp = await bcrypt.compare(otp, record.otpHash);
+    if (!isValidOtp) {
       return res.status(400).json({ ok: false, message: "Invalid code" });
+    }
 
+    // OTP is single-use
     await EmailOtp.deleteOne({ email });
 
-    const user = await User.create({
+    // 2. Check if user exists
+    let user = await User.findOne({ email });
+
+    // ================= LOGIN =================
+    if (user) {
+      const token = jwt.sign(
+        { userId: user._id, role: user.role },
+        process.env.JWT_SECRET_KEY,
+        { expiresIn: "7d" }
+      );
+
+      return res.status(200).json({
+        ok: true,
+        message: "Login successful",
+        user: user.nom,
+        token,
+      });
+    }
+
+    // ================= SIGNUP =================
+    user = await User.create({
       nom,
       prenom,
       email,
@@ -98,50 +115,65 @@ export async function signin(req, res) {
       provider: "local",
     });
 
-    // Generate tokens
-    const { token, refreshToken } = generateTokens(user._id, user.role);
+    // Assign cards to user
+    const cards = await Card.find({});
+    if(cards.length == 0){
+      console.log("no cards retireved");
+    }
+    const assignResult = await Promise.all(
+      cards.map((card) =>
+        UserToCard.create({
+          cardId: card._id,
+          userId: user._id,
+          status: "uncomplete",
+          hit: 0,
+        })
+      )
+    );
+    if(!assignResult || assignResult.length == 0){
+        console.log("no cards assigned");
+    }
+
+    const payload = {
+                id: user._id,
+                role: user.role
+            };
+    const token = createToken(payload);
 
     return res.status(201).json({
       ok: true,
-      message: "User created successfully",
-      user: {
-        _id: user._id,
-        nom: user.nom,
-        prenom: user.prenom,
-        username: user.username,
-        email: user.email,
-        provider: user.provider,
-        role: user.role,
-        sexe: user.sexe,
-        wilaya: user.wilaya,
-        age: user.age,
-      },
-      token,
-      refreshToken,
+      message: "User created and logged in successfully",
+      user: user.nom,
+      token
     });
   } catch (err) {
+    console.error(err);
+
     if (err.code === 11000) {
       return res.status(409).json({
         ok: false,
-        message: "Duplicated email or username",
+        message: "Email or username already exists",
       });
     }
 
     return res.status(500).json({
       ok: false,
-      message: "Error creating user",
+      message: "Server error",
     });
   }
 }
 
-// ======== Resend OTP ========
+//
+// ======================= RESEND OTP =======================
+//
 export async function resendOtp(req, res) {
   const { email } = req.body;
 
   try {
     const record = await EmailOtp.findOne({ email });
-    if (!record)
+    if (!record) {
       return res.status(400).json({ ok: false, message: "Email not found" });
+    }
 
     const otp = crypto.randomInt(100000, 999999).toString();
     const otpHash = await bcrypt.hash(otp, 10);
@@ -164,104 +196,109 @@ export async function resendOtp(req, res) {
   }
 }
 
-// ======== Google Sign-In ========
+//
+// ======================= GOOGLE SIGNIN =======================
+//
 export async function googleSignin(req, res) {
-  const { idToken } = req.body;
+  const { idToken, isSignup } = req.body;
 
   try {
     if (!idToken) {
-      console.error("❌ No idToken provided");
       return res.status(400).json({ ok: false, message: "Google token missing" });
     }
 
-    console.log("🔵 Verifying Google ID token...");
-
-    // Verify token with Google
     const ticket = await client.verifyIdToken({
       idToken,
       audience: process.env.GOOGLE_WEB_CLIENT_ID,
     });
-    
-    const payload = ticket.getPayload();
-    const { sub: googleId, email, given_name, family_name, email_verified } = payload;
 
-    console.log("🔵 Google token verified:", { email, googleId, verified: email_verified });
+    const payload = ticket.getPayload();
+    const {
+      sub: googleId,
+      email,
+      given_name,
+      family_name,
+      email_verified,
+    } = payload;
 
     if (!email_verified) {
-      console.error("❌ Email not verified by Google");
-      return res.status(401).json({ ok: false, message: "Email not verified by Google" });
+      return res.status(401).json({ ok: false, message: "Email not verified" });
     }
 
-    // Check if user exists
     let user = await User.findOne({ email });
 
-    // If user doesn't exist: create automatically
-    if (!user) {
-      console.log("🔵 Creating new Google user...");
-      
+    // ================= SIGNUP =================
+    if (isSignup) {
+      if (user) {
+        return res.status(400).json({
+          ok: false,
+          message:
+            user.provider === "local"
+              ? "This email is registered with password"
+              : "Google account already exists. Please login.",
+        });
+      }
+
       user = await User.create({
         email,
         googleId,
-        prenom: given_name || "",
-        nom: family_name || "",
+        prenom: given_name,
+        nom: family_name,
         provider: "google",
         role: "user",
-        username: email.split("@")[0] + "_" + Math.random().toString(36).substr(2, 5),
+        username: email.split("@")[0],
       });
-      
-      console.log("✅ New Google user created:", user._id);
-    } else {
-      console.log("🔵 Existing user found:", user._id);
-      
-      // If user exists but is local: block Google login
-      if (user.provider !== "google") {
-        console.error("❌ Email registered with password, not Google");
-        return res.status(400).json({
-          ok: false,
-          message: "This email is registered with password. Use normal login.",
-        });
-      }
 
-      // If Google ID mismatch: block login
-      if (user.googleId !== googleId) {
-        console.error("❌ Google ID mismatch");
-        return res.status(401).json({
-          ok: false,
-          message: "This Google account is not linked to this user.",
-        });
-      }
+      const token = jwt.sign(
+        { userId: user._id, role: user.role },
+        process.env.JWT_SECRET_KEY,
+        { expiresIn: "7d" }
+      );
+
+      return res.status(201).json({
+        ok: true,
+        message: "Google sign-up successful",
+        user,
+        token,
+      });
     }
 
-    // Generate tokens
-    const { token, refreshToken } = generateTokens(user._id, user.role);
+    // ================= LOGIN =================
+    if (!user) {
+      return res.status(404).json({
+        ok: false,
+        message: "No account found. Please sign up.",
+      });
+    }
 
-    console.log("✅ Google login successful for user:", user._id);
+    if (user.provider !== "google") {
+      return res.status(400).json({
+        ok: false,
+        message: "Use email & password to login",
+      });
+    }
+
+    if (user.googleId !== googleId) {
+      return res.status(401).json({
+        ok: false,
+        message: "Google account mismatch",
+      });
+    }
+
+    const token = jwt.sign(
+      { userId: user._id, role: user.role },
+      process.env.JWT_SECRET_KEY,
+      { expiresIn: "7d" }
+    );
 
     return res.status(200).json({
       ok: true,
-      message: "Google login/signup successful",
-      user: {
-        _id: user._id,
-        nom: user.nom,
-        prenom: user.prenom,
-        username: user.username,
-        email: user.email,
-        provider: user.provider,
-        role: user.role,
-        sexe: user.sexe,
-        wilaya: user.wilaya,
-        age: user.age,
-      },
+      message: "Google login successful",
+      user,
       token,
-      refreshToken,
     });
-
   } catch (err) {
-    console.error("❌ Google signin error:", err);
-    return res.status(401).json({ 
-      ok: false, 
-      message: "Invalid Google token",
-      error: process.env.NODE_ENV === 'development' ? err.message : undefined
-    });
+    console.error(err);
+    return res.status(401).json({ ok: false, message: "Invalid Google token" });
   }
 }

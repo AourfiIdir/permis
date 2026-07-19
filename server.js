@@ -31,6 +31,9 @@ app.use("/usertocard",UserToCardRouter);
 app.use("/user",userRouter);
 app.use("/mistake",mistakeRouter);
 
+app.get("/",(req,res)=>{
+    res.status(200);
+})
 app.use(errorHandler);
 
 

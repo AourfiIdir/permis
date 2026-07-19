@@ -2,15 +2,26 @@ import Mistake from '../models/Mistake.js';
 
 // Create a new mistake
 export async function createMistake(req, res) {
-    try {
-        const { description, userId, timestamp } = req.body;
-        const newMistake = new Mistake({ description, userId, timestamp });
-        const savedMistake = await newMistake.save();
-        res.status(201).json(savedMistake);
-    } catch (error) {
-        res.status(500).json({ message: error.message });
+  try {
+    const { mistake, card } = req.body;
+
+    if (!mistake || !card) {
+      return res.status(400).json({ message: "Mistake and card are required" });
     }
+
+    const newMistake = new Mistake({
+      mistake,
+      card,
+      user: req.user.id
+    });
+
+    const savedMistake = await newMistake.save();
+    res.status(201).json(savedMistake);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 }
+
 export async function getMistakes(req, res) {
     try {
         const mistakes = await Mistake.find();
@@ -35,34 +46,22 @@ export async function getMistakeById(req, res) {
 // ...existing code...
 
 export async function getMistakeByUserId(req, res) {
-    try {
-        const { userId } = req.params;
-        
-        if (!userId) {
-            return res.status(400).json({ message: "User ID is required" });
-        }
+  try {
+    const { userId } = req.params;
 
-        // Find all mistakes where user field matches userId
-        const mistakes = await Mistake.find({ user: userId })
-            .populate('card')  // Optional: populate card details
-            .sort({ createdAt: -1 }); // Sort by newest first
-        
-        if (mistakes.length === 0) {
-            return res.status(200).json({ 
-                message: "No mistakes found for this user", 
-                mistakes: [] 
-            });
-        }
+    const mistakes = await Mistake.find({ user: userId })
+      .populate('card')
+      .sort({ createdAt: -1 });
 
-        res.status(200).json({ 
-            userId: userId,
-            mistakeCount: mistakes.length,
-            mistakes: mistakes 
-        });
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
+    res.status(200).json({
+      count: mistakes.length,
+      mistakes
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 }
+
 
 // ...existing code...
 
@@ -98,3 +97,23 @@ export async function deleteMistake(req, res) {
         res.status(500).json({ message: error.message });
     }
 }
+export async function deleteMistakeByQuestion(req, res) {
+  try {
+    const { question, card } = req.body;
+
+    const deleted = await Mistake.findOneAndDelete({
+      user: req.user.id,
+      card: card,
+      mistake: { $regex: question }
+    });
+
+    if (!deleted) {
+      return res.status(404).json({ message: "No mistake found" });
+    }
+
+    res.status(200).json({ message: "Mistake removed" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+}
+
