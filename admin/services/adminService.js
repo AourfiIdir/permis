@@ -1,83 +1,59 @@
-import {createCardSchema} from "../../Validators/cardValidator.js"
+import { createCardSchema } from "../../Validators/cardValidator.js"
 import Card from "../../models/Card.js"
 import User from "../../models/User.js"
 import UserToCard from "../../models/UserToCard.js"
-export async function createCard(req,res){
-    const result = createCardSchema.safeParse(req.body);
-    if(!result.success){
-        return res.status(400).json({
-            error:result.error
-        })
-    }
-    
-    try{
-        const cardCreated = new Card(result.data)
-        const result2 = await cardCreated.save();
-        if(!result2){
-            return res.status(500).json({
-                err:"couldnt create a card"
-            })
-        }
-        const users = await User.find({});
-        if(!users){
-            return res.status(500).json({
-                message:"couldnt retrieve all users"
-            })
-        }
-        const result3 = await Promise.all(
-            users.map((user)=>{
-                UserToCard.create({
-                    cardId:result2._id,
-                    userId:user._id,
-                    status:"uncompleted",
-                    hit:0
-                })
-            })
-        )
-        res.status(201).json({
-            message:"card created"
-        })
 
-    }catch(err){
-        res.status(500).json({
-            err:err.message
-        })
+export async function createCard(req, res) {
+  const result = createCardSchema.safeParse(req.body)
+  if (!result.success) {
+    return res.status(400).json({ success: false, message: result.error.issues.map(e => e.message) })
+  }
+
+  try {
+    const cardCreated = new Card(result.data)
+    const savedCard = await cardCreated.save()
+
+    const users = await User.find({}).select("_id")
+    if (users.length > 0) {
+      await UserToCard.insertMany(
+        users.map(user => ({
+          cardId: savedCard._id,
+          userId: user._id,
+          status: "uncomplete",
+          hit: 0,
+        }))
+      )
     }
+
+    res.status(201).json({ success: true, message: "Card created and assigned to all users" })
+  } catch (err) {
+    res.status(500).json({ success: false, message: "Internal server error" })
+  }
 }
 
-export async function assignCards(req,res){
-    const user = req.user.id;
+export async function assignCards(req, res) {
+  try {
+    const userId = req.user.id
+    const cards = await Card.find({}).select("_id")
 
-    try{
-        //retrieve all the cards
-        const cards = await Card.find({});
-        if(!cards){
-            return res.status(500).json({
-                message:"cant retrieve cards"
-            })
-        }
-        const result = await Promise.all(
-            cards.map((card)=>{
-                return UserToCard.create({
-                    cardId:card._id,
-                    userId:user,
-                    status:"uncomplete",
-                    hit:0
-                })
-            })
-        )
-        if(!result){
-            return res.status(500).json({
-                message:"couldnt create user to card"
-            })
-        }
-        res.status(201).json({
-            message:"assigned successfully",
-            created:result
-        })
-    }catch(err){
-        res.status(500).json({
-            error:err.message
-        })
+    const existing = await UserToCard.find({ userId }).select("cardId -_id")
+    const existingIds = new Set(existing.map(c => c.cardId.toString()))
+
+    const missing = cards.filter(c => !existingIds.has(c._id.toString()))
+
+    if (missing.length > 0) {
+      await UserToCard.insertMany(
+        missing.map(card => ({
+          cardId: card._id,
+          userId,
+          status: "uncomplete",
+          hit: 0,
+        }))
+      )
     }
+
+    res.status(201).json({ success: true, message: "Cards assigned successfully", count: missing.length })
+  } catch (err) {
+    res.status(500).json({ success: false, message: "Internal server error" })
+  }
 }

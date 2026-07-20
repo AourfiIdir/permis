@@ -6,4 +6,6 @@ const EmailOtpSchema = new mongoose.Schema({
   expiresAt: { type: Date, required: true },
 }, { timestamps: true });
 
+EmailOtpSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 });
+
 export default mongoose.model("EmailOtp", EmailOtpSchema);

@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-import { type } from "os";
 
 const ProgressSchema = new mongoose.Schema({
     type: {
@@ -20,4 +19,7 @@ const ProgressSchema = new mongoose.Schema({
     timestamps: true,
     collection: 'Progress'
 });
+
+ProgressSchema.index({ userId: 1 });
+
 export default mongoose.model('Progress', ProgressSchema);

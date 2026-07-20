@@ -1,12 +1,13 @@
 {
   "name": "permis",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "version": "2.0.0",
+  "description": "SignWise backend API",
+  "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon server.js",
-    "seed": "node populate.js"
+    "seed": "node populate.js",
+    "test": "NODE_OPTIONS='--experimental-vm-modules' jest --forceExit --detectOpenHandles --verbose",
+    "test:watch": "NODE_OPTIONS='--experimental-vm-modules' jest --watch --forceExit --detectOpenHandles"
   },
   "keywords": [],
   "author": "",
@@ -18,15 +19,22 @@
     "cors": "^2.8.6",
     "dotenv": "^17.2.3",
     "express": "^5.2.1",
+    "express-rate-limit": "^7.5.0",
     "google-auth-library": "^10.5.0",
+    "helmet": "^8.1.0",
     "jsonwebtoken": "^9.0.3",
     "mongoose": "^9.1.3",
+    "morgan": "^1.10.0",
     "nodemailer": "^7.0.12",
     "resend": "^6.9.2",
     "validator": "^13.15.26",
     "zod": "^4.3.6"
   },
   "devDependencies": {
-    "nodemon": "^3.1.11"
+    "@jest/globals": "^30.2.0",
+    "jest": "^30.2.0",
+    "mongodb-memory-server": "^10.2.0",
+    "nodemon": "^3.1.11",
+    "supertest": "^7.1.0"
   }
 }

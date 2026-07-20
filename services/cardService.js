@@ -1,79 +1,63 @@
-import Card from "../models/Card.js";
-import { createCardSchema } from "../Validators/cardValidator.js";
+import Card from "../models/Card.js"
+import { createCardSchema } from "../Validators/cardValidator.js"
 
-// Get all cards
-export async function getCards(_req, res) {
+export async function getCards(req, res) {
   try {
-    const cards = await Card.find();
-    res.status(200).json(cards);
+    const page = parseInt(req.query.page) || 1
+    const limit = parseInt(req.query.limit) || 50
+    const skip = (page - 1) * limit
+
+    const cards = await Card.find().skip(skip).limit(limit)
+    const total = await Card.countDocuments()
+
+    res.status(200).json({ success: true, data: cards, page, limit, total })
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ success: false, message: "Internal server error" })
   }
 }
 
-// Get a single card by ID
 export async function getCard(req, res) {
   try {
-    const card = await Card.findById(req.params.id);
+    const card = await Card.findById(req.params.id)
     if (!card) {
-      return res.status(404).json({ message: "Card not found" });
+      return res.status(404).json({ success: false, message: "Card not found" })
     }
-    res.status(200).json(card);
+    res.status(200).json({ success: true, data: card })
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ success: false, message: "Internal server error" })
   }
 }
 
-// Get cards by category
 export async function getByCategory(req, res) {
   try {
-    const { categoryName } = req.params;
-    const cards = await Card.find({ category: categoryName });
-    res.status(200).json(cards);
+    const { categoryName } = req.params
+    const cards = await Card.find({ category: categoryName })
+    res.status(200).json({ success: true, data: cards })
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ success: false, message: "Internal server error" })
   }
 }
 
-// Create a new card with validation
 export async function createCard(req, res) {
   try {
-    // Validate the incoming request
-    const validatedData = createCardSchema.parse(req.body);
-
-    // Save to DB
-    const newCard = new Card(validatedData);
-    const savedCard = await newCard.save();
-
-    res.status(201).json(savedCard);
+    const validatedData = createCardSchema.parse(req.body)
+    const newCard = new Card(validatedData)
+    const savedCard = await newCard.save()
+    res.status(201).json({ success: true, data: savedCard })
   } catch (error) {
     if (error.name === "ZodError") {
-      const messages = error.issues.map((e) => e.message);
-      return res.status(400).json({ message: messages });
+      const messages = error.issues.map(e => e.message)
+      return res.status(400).json({ success: false, message: messages })
     }
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ success: false, message: "Internal server error" })
   }
 }
-
-
-
 
 export async function getCategories(req, res) {
-
-  
   try {
-    const categories = await Card.distinct("category");
-    res.status(200).json(categories);
+    const categories = await Card.distinct("category")
+    res.status(200).json({ success: true, data: categories })
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ success: false, message: "Internal server error" })
   }
 }
-export async function deleteAllCards(_req, res) {
-  try {
-    const result = await Card.deleteMany({});
-    res.status(200).json({ message: `${result.deletedCount} cards deleted.` });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-}
-

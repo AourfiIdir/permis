@@ -8,9 +8,8 @@ const CompleteSchema = new mongoose.Schema({
     },
     userId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Users',
+        ref: 'User',
         required: true
-        
     },
     status: {
         type: String,
@@ -24,4 +23,8 @@ const CompleteSchema = new mongoose.Schema({
 }, {
     timestamps: true
 });
+
+CompleteSchema.index({ userId: 1, cardId: 1 });
+CompleteSchema.index({ userId: 1, hit: 1 });
+
 export default mongoose.model('Complete', CompleteSchema);

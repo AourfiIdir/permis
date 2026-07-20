@@ -21,4 +21,4 @@ const ListSchema = new mongoose.Schema({
    }]
 });
 
-export default mongoose.model('Modules', ListSchema);
+export default mongoose.model('List', ListSchema);

@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 const MistakeSchema = new mongoose.Schema({
   user: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Users',
+    ref: 'User',
     required: true
   },
   card: {
@@ -16,9 +16,10 @@ const MistakeSchema = new mongoose.Schema({
     unique:true,
     required:true
   },
-  
 }, {
   timestamps: true
 });
+
+MistakeSchema.index({ user: 1, card: 1 });
 
 export default mongoose.model('Mistake', MistakeSchema);

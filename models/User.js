@@ -25,12 +25,12 @@ const UsersSchema = new mongoose.Schema(
     password: {
       type: String,
       minlength: [6, "Password must be at least 6 characters long"],
-      select: false, // hidden by default
+      select: false,
     },
 
     googleId: {
       type: String,
-      sparse: true, // allows null for local users
+      sparse: true,
     },
 
     provider: {
@@ -68,14 +68,11 @@ const UsersSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-
 UsersSchema.pre("save", async function () {
   if (this.isModified("password")) {
-    const saltRounds = 10;
+    const saltRounds = 12;
     this.password = await bcrypt.hash(this.password, saltRounds);
   }
 });
-
-
 
 export default mongoose.model('User', UsersSchema);
